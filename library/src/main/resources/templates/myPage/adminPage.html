@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout" >
+<head>
+
+    <link href="../../static/bootstrap/css/bootstrap.min.css"
+          th:href="@{/bootstrap/css/bootstrap.min.css}"  rel="stylesheet" >
+    <script src="../../static/bootstrap/js/bootstrap.bundle.min.js"
+            th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+    <link href="css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet" />
+</head>
+
+<style>
+.page-link {
+  color: #000;
+  background-color: #fff;
+  border: 1px solid #ccc;
+}
+
+
+.page-link:focus, .page-link:hover {
+  color: #000;
+background-color: #fafafa;
+  border-color: #ccc;
+}
+
+.list-group {
+    background-color:white
+}
+
+.list-group a{
+ background-color:white
+}
+
+.list-group-item:not(.active):not(.disabled) {
+    background-color: white
+}
+
+.list-group-item.active{
+ background-color: black;
+ color: white;
+ border-color: #ffffff;
+}
+
+</style>
+<body>
+<div th:replace="fragments/header::Main_header"></div>
+
+
+<div class="container mt-5 mb-5 ">
+
+    <h3 class="text-center mb-3 mt-5 mb-5 fw-medium">관리자 페이지</h3>
+    <hr>
+
+    <div class="d-flex align-items flex-column">
+
+        <div class="row">
+            <div class="col-2">
+                <div class="list-group" id="list-tab" role="tablist">
+                    <a class="list-group-item list-group-item-action active" style="height:50px;width:190px"
+                       id="list-messages-list" data-bs-toggle="list" href="#list-messages" role="tab"
+                       aria-controls="list-messages">도서 반납 내역</a>
+                    <a class="list-group-item list-group-item-action" style="height:50px;width:190px"
+                       id="list-settings-list3" data-bs-toggle="list" href="#list-settings3" role="tab"
+                       aria-controls="list-settings3">희망 도서 신청 내역</a>
+                </div>
+            </div>
+            <div class="col-10 ">
+                <div class="tab-content " id="nav-tabContent">
+
+
+                    <div class="tab-pane fade show active m-1 card" id="list-messages" role="tabpanel"
+                         aria-labelledby="list-messages-list">
+                        <div class="m-3">
+                            <div class="m-4">
+                                <h5 class="text-start">반납 신청 내역</h5>
+                                <hr>
+                                <div id="rentalHistory">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">서명</th>
+                                            <th scope="col">반납 상태</th>
+                                            <th scope="col">반납일</th>
+                                            <th scope="col">반납자</th>
+                                            <th scope="col"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="returnHistoryList">
+                                        <tr th:each="book : ${returnBookDto2}">
+                                            <td style="width: 5%">#</td>
+                                            <td style="width: 15%" th:text="${book.bookInfoDTO.bookName}"></td>
+                                            <td class="completeMsg" style="width: 15%">반납 확인 중</td>
+                                            <td style="width: 15%" th:text="${book.returnDate}"></td>
+                                            <td style="width: 15%" th:text="${book.memberId}"></td>
+                                            <td style="width: 15%">
+                                                <button class="ChkReturnBook btn btn-outline-dark"
+                                                        th:if="${book.returnState} == false"
+                                                        th:data-num="${book.bookInfoDTO.bookName}"
+                                                        th:value="${book.memberId}">반납 완료
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <div id="returnHistoryPaging" th:if="${responseDTO2} != null">
+
+                                        <div class="">
+                                            <nav aria-label="Page navigation example justify-content-end align-items-center">
+
+                                                <ul class="pagination justify-content-center ">
+
+                                                    <li class="page-item" th:if="${responseDTO2.prev}">
+                                                        <a class="page-link returnRentalBtn" pageLink="pagelink"
+                                                           th:data-num="${responseDTO2.start-1}">Previous</a>
+                                                    </li>
+
+                                                    <!-- 페이지 번호 표시 -->
+                                                    <th:block
+                                                            th:each="i : ${#numbers.sequence(responseDTO2.start,responseDTO2.end)}">
+                                                        <li>
+                                                            <th:block th:if="${responseDTO2.page == i}">
+                                                                <div class="page-link active returnRentalBtn"
+                                                                     style="color: white;background-color: black; border-color: #ccc;"
+                                                                     th:data-num="${i}">[[${i}]]
+                                                                </div>
+                                                            </th:block>
+                                                            <th:block th:unless="${responseDTO2.page == i}">
+                                                                <a class="page-link returnRentalBtn" th:data-num="${i}">[[${i}]]</a>
+                                                            </th:block>
+                                                        </li>
+                                                    </th:block>
+                                                    <!-- ------- -->
+
+                                                    <li class="page-item" th:if="${responseDTO2.next}">
+                                                        <a class="page-link returnRentalBtn" pageLink="pagelink"
+                                                           th:data-num="${responseDTO2.end+1}">Next</a>
+                                                    </li>
+                                                </ul>
+                                            </nav>
+                                        </div>
+
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+
+                            <div class="m-4">
+                                <h5 class="text-start">반납 내역</h5>
+                                <hr>
+
+                                <div id="rentalHistory2">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">서명</th>
+                                            <th scope="col">반납 상태</th>
+                                            <th scope="col">반납일</th>
+                                            <th scope="col">반납자</th>
+                                            <th scope="col"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="returnHistoryList2">
+                                        <tr th:each="book : ${returnBookDto}">
+                                            <td style="width: 5%">#</td>
+                                            <td style="width: 15%" th:text="${book.bookInfoDTO.bookName}"></td>
+                                            <td class="completeMsg" style="width: 15%">반납 확인</td>
+                                            <td style="width: 15%" th:text="${book.returnDate}"></td>
+                                            <td style="width: 15%" th:text="${book.memberId}"></td>
+                                            <td style="width: 15%">
+                                                <button class="ChkReturnBook" th:if="${book.returnState} == false"
+                                                        th:data-num="${book.bookInfoDTO.bookName}"
+                                                        th:value="${book.memberId}">반납 확인
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <div id="returnHistoryPaging2" th:if="${responseDTO} != null">
+
+                                        <div class="">
+                                            <nav aria-label="Page navigation example justify-content-end align-items-center">
+
+                                                <ul class="pagination justify-content-center ">
+
+                                                    <li class="page-item" th:if="${responseDTO.prev}">
+                                                        <a class="page-link returnRentalBtn2" pageLink="pagelink"
+                                                           th:data-num="${responseDTO.start-1}">Previous</a>
+                                                    </li>
+
+                                                    <!-- 페이지 번호 표시 -->
+                                                    <th:block
+                                                            th:each="i : ${#numbers.sequence(responseDTO.start,responseDTO.end)}">
+                                                        <li>
+                                                            <th:block th:if="${responseDTO.page == i}">
+                                                                <div class="page-link active returnRentalBtn2"
+                                                                     style="color: white;background-color: black; border-color: #ccc;"
+                                                                     th:data-num="${i}">[[${i}]]
+                                                                </div>
+                                                            </th:block>
+                                                            <th:block th:unless="${responseDTO.page == i}">
+                                                                <a class="page-link returnRentalBtn2"
+                                                                   th:data-num="${i}">[[${i}]]</a>
+                                                            </th:block>
+                                                        </li>
+                                                    </th:block>
+                                                    <!-- ------- -->
+
+                                                    <li class="page-item" th:if="${responseDTO.next}">
+                                                        <a class="page-link returnRentalBtn2" pageLink="pagelink"
+                                                           th:data-num="${responseDTO.end+1}">Next</a>
+                                                    </li>
+                                                </ul>
+                                            </nav>
+                                        </div>
+
+
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="tab-pane fade card" id="list-settings3" role="tabpanel"
+                     aria-labelledby="list-settings-list3">
+                    <div class="m-4">
+                        <h5 class="text-start mt-3">희망 도서 신청 내역</h5>
+                        <hr>
+                        <div id="hopeBook">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">서명</th>
+                                    <th scope="col">신청일</th>
+                                    <th scope="col">신청자</th>
+                                </tr>
+
+
+                                </thead>
+                                <tbody id="hopeBookList">
+
+                                <tr th:each="book : ${hopeBookDto}">
+                                    <td style="width: 5%">#</td>
+                                    <td style="width: 35%" th:text="${book.bookInfoDTO.bookName}"></td>
+                                    <td style="width: 25%" th:text="${book.hopeDate}"></td>
+                                    <td style="width: 25%" th:text="${book.memberId}"></td>
+                                </tr>
+
+
+                                </tbody>
+                            </table>
+
+
+                            <div id="hopeBookPaging" th:if="${responseDTO3} != null">
+                                <div class="">
+                                    <nav aria-label="Page navigation example justify-content-end align-items-center">
+
+                                        <ul class="pagination justify-content-center ">
+
+                                            <li class="page-item" th:if="${responseDTO3.prev}">
+                                                <a class="page-link hopeBookBtn" pageLink="pagelink"
+                                                   th:data-num="${responseDTO3.start-1}">Previous</a>
+                                            </li>
+
+                                            <!-- 페이지 번호 표시 -->
+                                            <th:block
+                                                    th:each="i : ${#numbers.sequence(responseDTO3.start,responseDTO3.end)}">
+                                                <li>
+                                                    <th:block th:if="${responseDTO3.page == i}">
+                                                        <div class="page-link active hopeBookBtn"
+                                                             style="color: white;background-color: black; border-color: #ccc;"
+                                                             th:data-num="${i}">[[${i}]]
+                                                        </div>
+                                                    </th:block>
+                                                    <th:block th:unless="${responseDTO3.page == i}">
+                                                        <a class="page-link hopeBookBtn" th:data-num="${i}">[[${i}]]</a>
+                                                    </th:block>
+                                                </li>
+                                            </th:block>
+                                            <!-- ------- -->
+
+                                            <li class="page-item" th:if="${responseDTO3.next}">
+                                                <a class="page-link hopeBookBtn" pageLink="pagelink"
+                                                   th:data-num="${responseDTO3.end+1}">Next</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+<div th:replace="fragments/footer::footer"></div>
+
+</body>
+
+
+<script
+        src="https://code.jquery.com/jquery-3.7.0.js"
+        integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+        crossorigin="anonymous"></script>
+<script th:inline="javascript">
+
+
+
+
+let waitPage = 1
+let completeCount = [[${responseDTO.total}]]
+let waitCount = [[${responseDTO2.total}]]
+
+$(document).on('click','.ChkReturnBook' ,function(e){
+
+
+
+    let chk = confirm('해당 도서를 반납 완료 처리 합니다.')
+
+    if(chk){
+
+     let bookName = e.target.getAttribute("data-num")
+    let memberId =  e.target.getAttribute("value")
+
+            $.ajax({
+                    type:"PUT",
+                    url: "/returnCompleteBook",
+                    data : {
+                        bookName : bookName,
+                        memberId : memberId
+                    },
+                    dataType : 'JSON',
+                    success:function(data){
+                        alert('반납 완료 처리되었습니다.')
+
+                        completeCount = data[0]
+                        waitCount = data[1]
+
+
+                $.ajax({
+                    type:"GET",
+                    url: "/returnRentalBookHistory",
+                    data : {
+                        page : 1,
+                        size : 5,
+                        chk : true
+                    },
+                    dataType : 'json',
+                    success:function(data){
+
+                     let returnDto = data
+                    let returnCount = completeCount
+
+
+                 let returnStr = ""
+                   for(let i = 0; i <returnDto.length; i++){
+                                         returnStr += "<tr>"
+                                                    + "<th scope='row' style='width: 5%'>" + "#" + "</th>"
+                                                        + `<td style='width: 15%'>${returnDto[i].bookInfoDTO.bookName} </td>`
+                                                        + `<td style='width: 15%'>반납 확인</td>`
+                                                        + `<td style='width: 15%'>${returnDto[i].returnDate}</td>`
+                                                          + `<td style='width: 15%'>${returnDto[i].memberId}</td>`
+                                                             + `<td style='width: 15%'></td>`
+                                                            + "</tr>"
+                                        }
+
+                                $('#returnHistoryList2').html(returnStr)
+
+
+                                if(returnCount != 0){
+                                $.ajax({
+                                        type:"GET",
+                                        url: '/searchBookPaging',
+                                        data: {
+                                            page : 1,
+                                            size : 5,
+                                            resultCount : returnCount
+                                        },
+                                        dataType : 'json',
+                                        success:function(data){
+
+                                         let str2 =  "<nav aria-label='Page navigation example justify-content-center align-items-center'>"
+                                        +"<ul class='pagination justify-content-center ' >"
+                                         if(data.prev == true){
+                                            str2 += "<li class='page-item'>"
+                                            + "<a class='page-link returnRentalBtn2' pageLink='pagelink' data-num='" + (data.start - 1)  + "'> Previous </a>"
+                                            + "</li>"
+                                            }
+
+                                        for(let i=data.start; i<=data.end; i++){
+
+                                            str2 += "<li>"
+                                            if(data.page == i ){
+                                                 str2 += "<div style='z-index: 1; color: #ccc; font-weight:bold; background-color: #333; border-color: #444;' class='page-link active returnRentalBtn2'  data-num='" + i +  "'>" +  i + "</div>"
+                                          }else{
+                                                str2 += "<a class='page-link  returnRentalBtn2'  data-num='" + i +  "'>" +  i + "</a>"
+                                            }
+                                            str2 +="</li>"
+                                        }
+
+                                        if(data.next == true){
+                                            str2 += "<li class='page-item'>"
+                                                     + "<a class='page-link returnRentalBtn2' pageLink='pagelink' data-num='" + (data.end + 1)  + "'>  Next </a>"
+                                                    +"</li>"
+                                        }
+                                        str2 += "</ul>"
+                                                +"</nav>"
+
+
+                                 $('#returnHistoryPaging2').html(str2)
+
+                            },
+                            error:function(){
+                                alert('잠시 후 다시 시도해주세요.')
+                            }
+                        })
+                        }
+
+
+
+
+
+
+
+
+                    $.ajax({
+                    type:"GET",
+                    url: "/returnRentalBookHistory",
+                    data : {
+                        page : waitPage,
+                        size : 5,
+                        chk : false
+                    },
+                    dataType : 'json',
+                    success:function(data){
+
+                     let returnDto = data
+                    let returnCount = waitCount
+
+
+                 let returnStr = ""
+                   for(let i = 0; i <returnDto.length; i++){
+                                         returnStr += "<tr>"
+                                                    + "<th scope='row' style='width: 5%'>" + "#" + "</th>"
+                                                        + `<td style='width: 15%'>${returnDto[i].bookInfoDTO.bookName} </td>`
+                                                        + `<td style='width: 15%'>반납 확인 중</td>`
+                                                        + `<td style='width: 15%'>${returnDto[i].returnDate}</td>`
+                                                          + `<td style='width: 15%'>${returnDto[i].memberId}</td>`
+                                                          if(returnDto[i].returnState == false){
+                                                                returnStr += `<td style='width: 15%'><button class='ChkReturnBook btn btn-outline-dark' data-num='${returnDto[i].bookInfoDTO.bookName}' value='${returnDto[i].memberId}'>반납 확인</button></td>`
+                                                          }else{
+                                                                  returnStr += `<td style='width: 15%'></td>`
+                                                          }
+                                                   returnStr += "</tr>"
+                                        }
+
+                                $('#returnHistoryList').html(returnStr)
+
+                                if(returnCount != 0){
+                                $.ajax({
+                                        type:"GET",
+                                        url: '/searchBookPaging',
+                                        data: {
+                                            page : waitPage,
+                                            size : 5,
+                                            resultCount : returnCount
+                                        },
+                                        dataType : 'json',
+                                        success:function(data){
+
+                                         let str2 =  "<nav aria-label='Page navigation example justify-content-center align-items-center'>"
+                                        +"<ul class='pagination justify-content-center ' >"
+                                         if(data.prev == true){
+                                            str2 += "<li class='page-item'>"
+                                            + "<a class='page-link returnRentalBtn' pageLink='pagelink' data-num='" + (data.start - 1)  + "'> Previous </a>"
+                                            + "</li>"
+                                            }
+
+                                        for(let i=data.start; i<=data.end; i++){
+
+                                            str2 += "<li>"
+                                            if(data.page == i ){
+                                                 str2 += "<div style='z-index: 1; color: #ccc; font-weight:bold; background-color: #333; border-color: #444;' class='page-link active returnRentalBtn'  data-num='" + i +  "'>" +  i + "</div>"
+                                          }else{
+                                                str2 += "<a class='page-link  returnRentalBtn'  data-num='" + i +  "'>" +  i + "</a>"
+                                            }
+                                            str2 +="</li>"
+                                        }
+
+                                        if(data.next == true){
+                                            str2 += "<li class='page-item'>"
+                                                     + "<a class='page-link returnRentalBtn' pageLink='pagelink' data-num='" + (data.end + 1)  + "'>  Next </a>"
+                                                    +"</li>"
+                                        }
+                                        str2 += "</ul>"
+                                                +"</nav>"
+
+
+                                 $('#returnHistoryPaging').html(str2)
+
+                            },
+                            error:function(){
+                                alert('잠시 후 다시 시도해주세요.')
+                            }
+                        })
+                        }
+
+
+                    },error:function(e){
+
+
+                    }
+
+             })
+
+
+
+
+                    },error:function(e){
+
+
+                    }
+
+             })
+
+
+
+
+
+
+
+
+
+
+
+
+                    },error:function(e){
+
+                    }
+
+              })
+
+
+
+
+    }else{
+
+
+
+    }
+
+})
+
+
+$(document).on('click','.hopeBookBtn' ,function(e){
+
+ let page = e.target.getAttribute("data-num") // datanum 속성의 값을 변수에 저장
+
+            $.ajax({
+                    type:"GET",
+                    url: "/hopeBookHistory",
+                    data : {
+                        page : page,
+                        size : 15
+                    },
+                    dataType : 'json',
+                    success:function(data){
+
+                     let hopeDto = data
+                    let hopeCount = [[${responseDTO3}]]
+
+                    console.log(data)
+                    console.log(hopeCount)
+
+
+                 let hopeStr = ""
+                   for(let i = 0; i <hopeDto.length; i++){
+                                         hopeStr += "<tr>"
+                                                    + "<th scope='row' style='width: 5%'>" + "#" + "</th>"
+                                                        + `<td style='width: 35%'>${hopeDto[i].bookInfoDTO.bookName} </td>`
+                                                         + `<td style='width: 25%'>${hopeDto[i].hopeDate} </td>`
+                                                        + `<td style='width: 25%'>${hopeDto[i].memberId}</td>`
+                                                    + "</tr>"
+                                        }
+
+
+                                $('#hopeBookList').html(hopeStr)
+
+                            if(hopeCount != null){
+                                $.ajax({
+                                        type:"GET",
+                                        url: '/searchBookPaging',
+                                        data: {
+                                            page : page,
+                                            size : 15,
+                                            resultCount : hopeCount.total
+                                        },
+                                        dataType : 'json',
+                                        success:function(data){
+
+                                         let str2 =  "<nav aria-label='Page navigation example justify-content-center align-items-center'>"
+                                        +"<ul class='pagination justify-content-center ' >"
+                                         if(data.prev == true){
+                                            str2 += "<li class='page-item'>"
+                                            + "<a class='page-link hopeBookBtn' pageLink='pagelink' data-num='" + (data.start - 1)  + "'> Previous </a>"
+                                            + "</li>"
+                                            }
+
+                                        for(let i=data.start; i<=data.end; i++){
+
+                                            str2 += "<li>"
+                                            if(data.page == i ){
+                                                 str2 += "<div style='z-index: 1; color: #ccc; font-weight:bold; background-color: #333; border-color: #444;' class='page-link active hopeBookBtn'  data-num='" + i +  "'>" +  i + "</div>"
+                                          }else{
+                                                str2 += "<a class='page-link  hopeBookBtn'  data-num='" + i +  "'>" +  i + "</a>"
+                                            }
+                                            str2 +="</li>"
+                                        }
+
+                                        if(data.next == true){
+                                            str2 += "<li class='page-item'>"
+                                                     + "<a class='page-link hopeBookBtn' pageLink='pagelink' data-num='" + (data.end + 1)  + "'>  Next </a>"
+                                                    +"</li>"
+                                        }
+                                        str2 += "</ul>"
+                                                +"</nav>"
+
+
+                                 $('#hopeBookPaging').html(str2)
+
+                            },
+                            error:function(){
+                                alert('잠시 후 다시 시도해주세요.')
+                            }
+                        })
+                        }
+
+
+                    },error:function(e){
+
+
+                    }
+
+             })
+
+
+
+})
+
+
+$(document).on('click','.returnRentalBtn2' ,function(e){
+
+ let page = e.target.getAttribute("data-num") // datanum 속성의 값을 변수에 저장
+
+    completedPage = page
+
+
+            $.ajax({
+                    type:"GET",
+                    url: "/returnRentalBookHistory",
+                    data : {
+                        page : page,
+                        size : 5,
+                        chk : true
+                    },
+                    dataType : 'json',
+                    success:function(data){
+
+                     let returnDto = data
+                    let returnCount = completeCount
+
+                 let returnStr = ""
+                   for(let i = 0; i <returnDto.length; i++){
+                                         returnStr += "<tr>"
+                                                    + "<th scope='row' style='width: 5%'>" + "#" + "</th>"
+                                                        + `<td style='width: 15%'>${returnDto[i].bookInfoDTO.bookName} </td>`
+                                                        + `<td style='width: 15%'>반납 확인</td>`
+                                                        + `<td style='width: 15%'>${returnDto[i].returnDate}</td>`
+                                                          + `<td style='width: 15%'>${returnDto[i].memberId}</td>`
+                                                             + `<td style='width: 15%'></td>`
+                                                            + "</tr>"
+                                        }
+
+                                $('#returnHistoryList2').html(returnStr)
+
+                                if(returnCount != 0){
+                                $.ajax({
+                                        type:"GET",
+                                        url: '/searchBookPaging',
+                                        data: {
+                                            page : page,
+                                            size : 5,
+                                            resultCount : returnCount
+                                        },
+                                        dataType : 'json',
+                                        success:function(data){
+
+                                         let str2 =  "<nav aria-label='Page navigation example justify-content-center align-items-center'>"
+                                        +"<ul class='pagination justify-content-center ' >"
+                                         if(data.prev == true){
+                                            str2 += "<li class='page-item'>"
+                                            + "<a class='page-link returnRentalBtn2' pageLink='pagelink' data-num='" + (data.start - 1)  + "'> Previous </a>"
+                                            + "</li>"
+                                            }
+
+                                        for(let i=data.start; i<=data.end; i++){
+
+                                            str2 += "<li>"
+                                            if(data.page == i ){
+                                                 str2 += "<div style='z-index: 1; color: #ccc; font-weight:bold; background-color: #333; border-color: #444;' class='page-link active returnRentalBtn2'  data-num='" + i +  "'>" +  i + "</div>"
+                                          }else{
+                                                str2 += "<a class='page-link  returnRentalBtn2'  data-num='" + i +  "'>" +  i + "</a>"
+                                            }
+                                            str2 +="</li>"
+                                        }
+
+                                        if(data.next == true){
+                                            str2 += "<li class='page-item'>"
+                                                     + "<a class='page-link returnRentalBtn2' pageLink='pagelink' data-num='" + (data.end + 1)  + "'>  Next </a>"
+                                                    +"</li>"
+                                        }
+                                        str2 += "</ul>"
+                                                +"</nav>"
+
+
+                                 $('#returnHistoryPaging2').html(str2)
+
+                            },
+                            error:function(){
+                                alert('잠시 후 다시 시도해주세요.')
+                            }
+                        })
+                        }
+
+
+                    },error:function(e){
+
+
+                    }
+
+             })
+
+
+
+})
+
+
+$(document).on('click','.returnRentalBtn' ,function(e){
+
+ let page = e.target.getAttribute("data-num") // datanum 속성의 값을 변수에 저장
+    waitPage = page
+
+
+            $.ajax({
+                    type:"GET",
+                    url: "/returnRentalBookHistory",
+                    data : {
+                        page : page,
+                        size : 5,
+                        chk : false
+                    },
+                    dataType : 'json',
+                    success:function(data){
+
+                     let returnDto = data
+                    let returnCount = waitCount
+
+
+                 let returnStr = ""
+                   for(let i = 0; i <returnDto.length; i++){
+                                         returnStr += "<tr>"
+                                                    + "<th scope='row' style='width: 5%'>" + "#" + "</th>"
+                                                        + `<td style='width: 15%'>${returnDto[i].bookInfoDTO.bookName} </td>`
+                                                        + `<td style='width: 15%'>반납 확인 중</td>`
+                                                        + `<td style='width: 15%'>${returnDto[i].returnDate}</td>`
+                                                          + `<td style='width: 15%'>${returnDto[i].memberId}</td>`
+                                                          if(returnDto[i].returnState == false){
+                                                                returnStr += `<td style='width: 15%'><button class='ChkReturnBook btn btn-outline-dark' data-num='${returnDto[i].bookInfoDTO.bookName}' value='${returnDto[i].memberId}'>반납 확인</button></td>`
+                                                          }else{
+                                                                  returnStr += `<td style='width: 15%'></td>`
+                                                          }
+                                                   returnStr += "</tr>"
+                                        }
+
+                                $('#returnHistoryList').html(returnStr)
+
+                                if(returnCount != 0){
+                                $.ajax({
+                                        type:"GET",
+                                        url: '/searchBookPaging',
+                                        data: {
+                                            page : page,
+                                            size : 5,
+                                            resultCount : returnCount
+                                        },
+                                        dataType : 'json',
+                                        success:function(data){
+
+                                         let str2 =  "<nav aria-label='Page navigation example justify-content-center align-items-center'>"
+                                        +"<ul class='pagination justify-content-center ' >"
+                                         if(data.prev == true){
+                                            str2 += "<li class='page-item'>"
+                                            + "<a class='page-link returnRentalBtn' pageLink='pagelink' data-num='" + (data.start - 1)  + "'> Previous </a>"
+                                            + "</li>"
+                                            }
+
+                                        for(let i=data.start; i<=data.end; i++){
+
+                                            str2 += "<li>"
+                                            if(data.page == i ){
+                                                 str2 += "<div style='z-index: 1; color: #ccc; font-weight:bold; background-color: #333; border-color: #444;' class='page-link active returnRentalBtn'  data-num='" + i +  "'>" +  i + "</div>"
+                                          }else{
+                                                str2 += "<a class='page-link  returnRentalBtn'  data-num='" + i +  "'>" +  i + "</a>"
+                                            }
+                                            str2 +="</li>"
+                                        }
+
+                                        if(data.next == true){
+                                            str2 += "<li class='page-item'>"
+                                                     + "<a class='page-link returnRentalBtn' pageLink='pagelink' data-num='" + (data.end + 1)  + "'>  Next </a>"
+                                                    +"</li>"
+                                        }
+                                        str2 += "</ul>"
+                                                +"</nav>"
+
+
+                                 $('#returnHistoryPaging').html(str2)
+
+                            },
+                            error:function(){
+                                alert('잠시 후 다시 시도해주세요.')
+                            }
+                        })
+                        }
+
+
+                    },error:function(e){
+
+
+                    }
+
+             })
+
+
+})
+
+
+
+
+
+
+
+</script>
+
+
+</html>

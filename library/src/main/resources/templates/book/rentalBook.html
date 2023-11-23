@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+
+<link href="../../static/bootstrap/css/bootstrap.min.css"
+      th:href="@{/bootstrap/css/bootstrap.min.css}"  rel="stylesheet" >
+<script src="../../static/bootstrap/js/bootstrap.bundle.min.js"
+        th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+<link href="css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet" />
+
+
+<style>
+   a {
+  text-decoration: none;
+  color: black;
+}
+
+.page-link {
+  color: #000;
+  background-color: #fff;
+  border: 1px solid #ccc;
+}
+
+
+.page-link:focus, .page-link:hover {
+  color: #000;
+  background-color: #fafafa;
+  border-color: #ccc;
+}
+
+
+
+
+</style>
+<body>
+
+<div th:replace="fragments/header::Main_header"></div>
+
+
+<div class="container">
+
+    <h3 class="text-center mb-3 mt-5 mb-5 fw-medium">통합자료검색</h3>
+    <hr>
+    <div class="d-flex align-items flex-column mt-2">
+        <div class="card w-50" style="align:center">
+
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" style="color:black">통합 자료 검색</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" style="color:black">신작 도서</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" style="color:black">인기 대여 도서</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" style="color:black">학습실 예약</a>
+                </li>
+            </ul>
+
+
+        </div>
+
+        <div class="mt-2">
+
+            <div class="card" id="topView">
+
+                <div class="card-body mt-2">
+                    <div class="d-flex justify-content-start">
+                        <div class="col-2">
+                            <h5 class="card-title ml-2 fw-semibold">공공도서관</h5>
+                        </div>
+                        <div class="col-1">
+                            <span class="fw-semibold"> 전체 </span> <input type="checkbox" style="accent-color: black;"
+                                                                         checked="true">
+                        </div>
+
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-center">
+                        <div class="col-2">
+                            <span class="fw-semibold">양산 도서관</span> <input type="checkbox" style="accent-color: black;"
+                                                                           checked="true">
+                        </div>
+                        <div class="col-2">
+                            <span class="fw-semibold">웅산 도서관</span> <input type="checkbox" style="accent-color: black;"
+                                                                           checked="false">
+                        </div>
+                        <div class="col-2">
+                            <span class="fw-semibold">중앙 도서관 </span><input type="checkbox" style="accent-color: black;"
+                                                                           checked="false">
+                        </div>
+                        <div class="col-2">
+                            <span class="fw-semibold">서창 도서관</span> <input type="checkbox" style="accent-color: black;"
+                                                                           checked="false">
+                        </div>
+                        <div class="col-2">
+                            <span class="fw-semibold">영어 도서관</span> <input type="checkbox" style="accent-color: black;"
+                                                                           checked="false">
+                        </div>
+                        <div class="col-2">
+                            <span class="fw-semibold">상북 어린이 도서관 </span><input type="checkbox"
+                                                                               style="accent-color: black;"
+                                                                               checked="false">
+                        </div>
+
+                    </div>
+
+
+                    <form class="d-flex mt-3" role="search">
+
+                        <div class="dropdown">
+
+
+                            <select name="languages" id="searchType" class="text-center fw-semibold"
+                                    style="background-color:black;color:white;width:115px;height:55px;border:1px solid black;border-radius:0.5">
+                                <option value="ItemNewAll">전체 검색</option>
+                                <option value="title">제목</option>
+                                <option value="author">저자</option>
+                                <option value="publisher">출판사</option>
+                            </select>
+                        </div>
+
+
+                        <input class="form-control-lg me-1 w-100  border border-dark-subtle" id="searchData"
+                               type="search" aria-label="Search">
+
+                        <button class="btn btn-dark" type="button" id="searchBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="25" fill="currentColor"
+                                 class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="mt-3">
+            <small id="resultCount">총 0권이 검색되었습니다.</small>
+        </div>
+
+        <div>
+            <div id="searchResult">
+
+
+            </div>
+
+            <div class="mt-1" id="searchPaging">
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+<div th:replace="fragments/footer::footer"></div>
+
+
+
+
+<script
+        src="https://code.jquery.com/jquery-3.7.0.js"
+        integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+        crossorigin="anonymous"></script>
+<script th:inline="javascript">
+
+
+        let searchData = ' '
+        let searchType = ' '
+        let url = ''
+
+        $(document).on('click','.rentalBtn' ,function(e){
+
+          if([[${loginChk}]] == 'true'){
+
+            let chk = confirm('해당 도서를 대여하시겠습니까?')
+
+            if(chk){
+
+
+            let bookName = e.target.getAttribute("value")
+            let bookImg = e.target.getAttribute("data-info")
+            let bookAuthor = e.target.getAttribute("data-value")
+            let bookPublisher = e.target.getAttribute("data-name")
+            let bookCategory = e.target.getAttribute("data-type")
+
+
+                       $.ajax({
+                                type:"POST",
+                                url: '/rentalBook',
+                                data : {
+                                    bookName : bookName,
+                                    bookImg : bookImg,
+                                    bookAuthor : bookAuthor,
+                                    bookPublisher : bookPublisher,
+                                    bookCategory : bookCategory
+                                },
+                                dataType : 'text',
+                                success:function(data){
+                                    console.log(data)
+                                    if(data == '대여 가능'){
+                                        alert('대여한 도서는 내 정보에서 확인 하실 수 있습니다.')
+                                    }else if(data == '대여 불가'){
+                                        alert('이미 대여 중인 도서입니다.')
+                                    }else{
+                                        alert('최대 대여 개수는 8권으로 제한 되어 있습니다..')
+                                    }
+
+                                },error : function(e){
+                                    alert('잠시 후 다시 시도해주세요,')
+                                }
+                            })
+
+                     }
+
+
+                }else{
+                        alert('로그인을 해주세요.')
+
+                }
+
+
+        })
+
+
+        $(document).on('click','.likeBtn' ,function(e){
+
+
+
+        if([[${loginChk}]] == 'true'){
+
+
+            let bookName = e.target.getAttribute("value")
+            let bookImg = e.target.getAttribute("data-info")
+            let bookAuthor = e.target.getAttribute("data-value")
+            let bookPublisher = e.target.getAttribute("data-name")
+            let bookCategory = e.target.getAttribute("data-type")
+
+               $.ajax({
+                        type:"POST",
+                        url: '/likeBook',
+                        data : {
+                            bookName : bookName,
+                            bookImg : bookImg,
+                            bookAuthor : bookAuthor,
+                            bookPublisher : bookPublisher,
+                            bookCategory : bookCategory
+
+                        },
+                        dataType : 'json',
+                        success:function(data){
+
+                            if(data){
+                                alert('찜 한 도서는 내 정보에서 확인 하실 수 있습니다.')
+                            }else{
+                                alert('이미 관심 도서 목록에 있는 도서입니다.')
+                            }
+
+                        },error : function(e){
+
+                        }
+                    })
+        }else{
+                alert('로그인을 해주세요.')
+
+        }
+
+
+
+
+
+
+        })
+
+
+
+    $(document).on('click','.Accountpaging' ,function(e){
+
+    let page = e.target.getAttribute("data-num") // datanum 속성의 값을 변수에 저장
+    let pagingUrl = url.replace('start=1',`start=${page}`)
+
+     let top = document.getElementById("topView");
+     top.scrollIntoView();
+
+
+     $.ajax({
+            type:"GET",
+            url: pagingUrl,
+            dataType : 'json',
+            success:function(data){
+
+            $('#resultCount').text(`총 ${data.totalResults}권이 검색되었습니다.`)
+
+            let str = ''
+            for(let i = 0; i< data.item.length; i++){
+            str  += "<div class='card mt-3'>"
+                    +"<div class='d-flex justify-content-start'>"
+                        +"<div class='col-3 mt-3'>"
+                            +`<img src='${data.item[i].cover}' class='d-block w-75 mx-auto'  height='220px' alt='...'>`
+                        +"</div>"
+                        +"<div class='col-9 mt-2'>"
+                            +"<div class='d-flex align-items flex-column mt-2'>"
+
+                                +"<div class='d-flex justify-content-start'>"
+                                    +"<div class='col-10'>"
+                                        +`<h5 class='fw-semibold'>${data.item[i].title}</h5>`
+                                    +"</div>"
+
+                                    +"<div class='col-2'>"
+                                        +"<a href='#' class='fw-semibold ' style='color:gray'>" + '자세히 보기 >' + "</a>"
+                                    +"</div>"
+
+                                +"</div>"
+
+                                +"<div class='mt-3'>"
+                                    +"<table class='table table-bordered'>"
+
+                                        +"<tbody class='table-group-divider'>"
+                                        +"<tr>"
+                                            +"<th scope='row' class='table-active' style=' width: 250px;'>" + '저자' + "</th>"
+                                            +`<td> ${data.item[i].author}</td>`
+                                        +"</tr>"
+
+                                        +"<tr>"
+                                            +"<th scope='row' class='table-active ' style=' width: 250px;'>" + '카테고리' +"</th>"
+                                            +`<td> ${data.item[i].categoryName}</td>`
+                                        +"</tr>"
+                                        +"<tr>"
+                                            +"<th scope='row' class='table-active ' style=' width: 250px;'>"+ '대출 가능 여부' +"</th>"
+                                            +"<td>"+ '대출가능(비치중)'+"</td>"
+                                        +"</tr>"
+
+                                        +"<tr>"
+                                            +"<th scope='row' class='table-active' style=' width: 250px;'>"+ '출판사'+"</th>"
+                                            +`<td>${data.item[i].publisher}</td>`
+                                        +"</tr>"
+                                        +"</tbody>"
+                                    +"</table>"
+
+                                +"</div>"
+                                +"<div>"
+                                    +"<div class='d-flex justify-content-center'>"
+                                        +"<div class='col-9'>"
+
+                                        +"</div>"
+                                        +"<div class='col-3 mb-3 '>"
+                                            +`<button class='btn btn-danger m-1 likeBtn' value='${data.item[i].title}' data-info='${data.item[i].cover}' data-value='${data.item[i].author}' data-name='${data.item[i].publisher}' data-type='${data.item[i].categoryName}'> ♡ 찜하기 </button>`
+                                            +`<button class='btn btn-secondary m-1 rentalBtn' value='${data.item[i].title}' data-info='${data.item[i].cover}' data-value='${data.item[i].author}' data-name='${data.item[i].publisher}' data-type='${data.item[i].categoryName}' >대여하기</button>`
+                                        +"</div>"
+
+
+                                    +"</div>"
+
+
+                                +"</div>"
+
+
+                            +"</div>"
+                        +"</div>"
+
+                    +"</div>"
+                +"</div>"
+
+                }
+
+                $('#searchResult').html(str)
+
+
+            $.ajax({
+                        type:"GET",
+                        url: '/searchBookPaging',
+                        data: {
+                            page : page,
+                            size : 10,
+                            resultCount : data.totalResults
+                        },
+                        dataType : 'json',
+                        success:function(data){
+
+                         let str2 =  "<nav aria-label='Page navigation example justify-content-center align-items-center'>"
+                        +"<ul class='pagination justify-content-center ' >"
+                         if(data.prev == true){
+                            str2 += "<li class='page-item'>"
+                            + "<a class='page-link Accountpaging' pageLink='pagelink' data-num='" + (data.start - 1)  + "'> Previous </a>"
+                            + "</li>"
+                            }
+
+                        for(let i=data.start; i<=data.end; i++){
+
+                            str2 += "<li>"
+                            if(data.page == i ){
+                                str2 += "<div style='z-index: 1; color: #ccc; font-weight:bold; background-color: #333; border-color: #444;' class='page-link active Accountpaging'  data-num='" + i +  "'>" +  i + "</div>"
+                            }else{
+                                str2 += "<a class='page-link  Accountpaging'  data-num='" + i +  "'>" +  i + "</a>"
+                            }
+                            str2 +="</li>"
+                        }
+
+                        if(data.next == true){
+                            str2 += "<li class='page-item'>"
+                                     + "<a class='page-link Accountpaging' pageLink='pagelink' data-num='" + (data.end + 1)  + "'>  Next </a>"
+                                    +"</li>"
+                        }
+                        str2 += "</ul>"
+                                +"</nav>"
+
+
+                           $('#searchPaging').html(str2)
+
+
+
+                        }
+
+                    })
+
+
+
+            },
+            error:function(){
+                alert('잠시 후 다시 시도해주세요.')
+            }
+        })
+
+
+
+
+})
+
+
+
+    $('#searchBtn').click(function(){
+
+        searchData = $('#searchData').val()
+        searchType = $('#searchType').val()
+
+        if(searchType == 'ItemNewAll'){
+            url = `https://www.aladin.co.kr/ttb/api/ItemSearch.aspx?ttbkey=ttbdhalsrb131629001&Query=${searchData}&QueryType=ItemNewAll&MaxResults=10&start=1&SearchTarget=All&output=js&Version=20131101`
+        }else if(searchType == 'title'){
+            url = `https://www.aladin.co.kr/ttb/api/ItemSearch.aspx?ttbkey=ttbdhalsrb131629001&Query=${searchData}&QueryType=Title&MaxResults=10&start=1&SearchTarget=Book&output=js&Version=20131101`
+        }else if(searchType == 'author'){
+             url = `https://www.aladin.co.kr/ttb/api/ItemSearch.aspx?ttbkey=ttbdhalsrb131629001&Query=${searchData}&QueryType=Author&&MaxResults=10&start=1&SearchTarget=Book&output=js&Version=20131101`
+        }else{
+            url = `https://www.aladin.co.kr/ttb/api/ItemSearch.aspx?ttbkey=ttbdhalsrb131629001&Query=${searchData}&QueryType=Publisher&&MaxResults=10&start=1&SearchTarget=Book&output=js&Version=20131101`
+        }
+
+
+
+     $.ajax({
+            type:"GET",
+            url: url,
+            dataType : 'json',
+            success:function(data){
+
+            $('#resultCount').text(`총 ${data.totalResults}권이 검색되었습니다.`)
+
+
+            let str = ''
+            for(let i = 0; i< data.item.length; i++){
+             console.log(data.item[i].title)
+            str  += "<div class='card mt-3'>"
+                    +"<div class='d-flex justify-content-start'>"
+                        +"<div class='col-3 mt-3'>"
+                            +`<img src='${data.item[i].cover}' class='d-block w-75 mx-auto'  height='220px' alt='...'>`
+                        +"</div>"
+                        +"<div class='col-9 mt-2'>"
+                            +"<div class='d-flex align-items flex-column mt-2'>"
+
+                                +"<div class='d-flex justify-content-start'>"
+                                    +"<div class='col-10'>"
+                                        +`<h5 class='fw-semibold'>${data.item[i].title}</h5>`
+                                    +"</div>"
+
+                                    +"<div class='col-2'>"
+                                        +"<a href='#' class='fw-semibold ' style='color:gray'>" + '자세히 보기 >' + "</a>"
+                                    +"</div>"
+
+                                +"</div>"
+
+                                +"<div class='mt-3'>"
+                                    +"<table class='table table-bordered'>"
+
+                                        +"<tbody class='table-group-divider'>"
+                                        +"<tr>"
+                                            +"<th scope='row' class='table-active' style=' width: 250px;'>" + '저자' + "</th>"
+                                            +`<td> ${data.item[i].author}</td>`
+                                        +"</tr>"
+
+                                        +"<tr>"
+                                            +"<th scope='row' class='table-active ' style=' width: 250px;'>" + '카테고리' +"</th>"
+                                            +`<td> ${data.item[i].categoryName}</td>`
+                                        +"</tr>"
+                                        +"<tr>"
+                                            +"<th scope='row' class='table-active ' style=' width: 250px;'>"+ '대출 가능 여부' +"</th>"
+                                            +"<td>"+ '대출가능(비치중)'+"</td>"
+                                        +"</tr>"
+
+                                        +"<tr>"
+                                            +"<th scope='row' class='table-active' style=' width: 250px;'>"+ '출판사'+"</th>"
+                                            +`<td>${data.item[i].publisher}</td>`
+                                        +"</tr>"
+                                        +"</tbody>"
+                                    +"</table>"
+
+                                +"</div>"
+                                +"<div>"
+                                    +"<div class='d-flex justify-content-center'>"
+                                        +"<div class='col-9'>"
+
+                                        +"</div>"
+                                        +"<div class='col-3 mb-3 '>"
+                                         +`<button class='btn btn-danger m-1 likeBtn' value='${data.item[i].title}' data-info='${data.item[i].cover}' data-value='${data.item[i].author}' data-name='${data.item[i].publisher}' data-type='${data.item[i].categoryName}'> ♡ 찜하기 </button>`
+                                          +`<button class='btn btn-secondary m-1 rentalBtn' value='${data.item[i].title}' data-info='${data.item[i].cover}' data-value='${data.item[i].author}' data-name='${data.item[i].publisher}' data-type='${data.item[i].categoryName}' >대여하기</button>`
+                                        +"</div>"
+
+
+                                    +"</div>"
+
+
+                                +"</div>"
+
+
+                            +"</div>"
+                        +"</div>"
+
+                    +"</div>"
+                +"</div>"
+
+                }
+
+                $('#searchResult').html(str)
+
+
+
+
+            $.ajax({
+                        type:"GET",
+                        url: '/searchBookPaging',
+                        data: {
+                            page : 1,
+                            size : 10,
+                            resultCount : data.totalResults
+                        },
+                        dataType : 'json',
+                        success:function(data){
+
+                         let str2 =  "<nav aria-label='Page navigation example justify-content-center align-items-center'>"
+                        +"<ul class='pagination justify-content-center ' >"
+                         if(data.prev == true){
+                            str2 += "<li class='page-item'>"
+                            + "<a class='page-link Accountpaging' pageLink='pagelink' data-num='" + (data.start - 1)  + "'> Previous </a>"
+                            + "</li>"
+                            }
+
+                        for(let i=data.start; i<=data.end; i++){
+
+                            str2 += "<li>"
+                            if(data.page == i ){
+                                 str2 += "<div style='z-index: 1; color: #ccc; font-weight:bold; background-color: #333; border-color: #444;' class='page-link active Accountpaging'  data-num='" + i +  "'>" +  i + "</div>"
+                          }else{
+                                str2 += "<a class='page-link  Accountpaging'  data-num='" + i +  "'>" +  i + "</a>"
+                            }
+                            str2 +="</li>"
+                        }
+
+                        if(data.next == true){
+                            str2 += "<li class='page-item'>"
+                                     + "<a class='page-link Accountpaging' pageLink='pagelink' data-num='" + (data.end + 1)  + "'>  Next </a>"
+                                    +"</li>"
+                        }
+                        str2 += "</ul>"
+                                +"</nav>"
+
+
+                           $('#searchPaging').html(str2)
+
+
+
+                        }
+
+                    })
+
+
+
+            },
+            error:function(){
+                alert('잠시 후 다시 시도해주세요.')
+            }
+        })
+
+
+
+    })
+
+
+
+</script>
+
+
+
+
+
+</body>
+</html>

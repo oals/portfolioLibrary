@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<link href="../../static/bootstrap/css/bootstrap.min.css"
+      th:href="@{/bootstrap/css/bootstrap.min.css}"  rel="stylesheet" >
+<script src="../../static/bootstrap/js/bootstrap.bundle.min.js"
+        th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+<link href="css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet" />
+
+
+<style>
+    .selectBtn{
+        color:gray;
+    }
+
+    .selectBtn:hover{
+        color:green;
+    }
+
+</style>
+
+
+
+</style>
+<body>
+
+<div th:replace="fragments/header::Main_header"></div>
+
+
+<div class="container">
+
+    <h3 class="text-center mb-3 mt-5 mb-5 fw-medium ">자유학습실
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil"
+             viewBox="0 0 16 16">
+            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+        </svg>
+    </h3>
+    <hr>
+
+    <div class="d-flex justify-content-end">
+        <div class="col-4">
+            <div class="d-flex align-items flex-column ">
+                <div>
+                    <span style="color:gray; fw-medium " id="seatCount">남은 좌석 26/26</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="d-flex justify-content-center">
+        <div class="col-9  border border-dark-subtle m-3" style=" border-radius:0.5em;  height:533px">
+
+            <div class="d-flex align-items flex-column">
+
+                <div class="d-flex justify-content-start mt-2">
+
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn selectBtn No01"> No.01 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn  selectBtn No02"> No.02 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn  selectBtn No03"> No.03 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn  selectBtn No04"> No.04 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn  selectBtn No05"> No.05 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn  selectBtn No06"> No.06 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn  selectBtn No07"> No.07 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn  selectBtn No08"> No.08 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn  selectBtn No09"> No.09 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn  selectBtn No10"> No.10 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+
+
+                </div>
+
+                <div class="d-flex justify-content-start mt-5">
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn selectBtn No11"> No.11 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn  selectBtn No12"> No.12 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn  selectBtn No13"> No.13 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn  selectBtn No14"> No.14 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+                    <div class="col-1 mx-auto">
+
+                    </div>
+                    <div class="col-1 mx-auto ">
+
+                    </div>
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn  selectBtn No15"> No.15 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn  selectBtn No16"> No.16 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn  selectBtn No17"> No.17 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn  selectBtn No18"> No.18 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+
+                </div>
+
+                <div class="d-flex justify-content-start mt-5">
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn selectBtn No19"> No.19 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn  selectBtn No20"> No.20 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn  selectBtn No21"> No.21 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn  selectBtn No22"> No.22 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+                    <div class="col-1 mx-auto">
+
+                    </div>
+                    <div class="col-1 mx-auto ">
+
+                    </div>
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn  selectBtn No23"> No.23 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn  selectBtn No24"> No.24 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn  selectBtn No25"> No.25 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+                    <div class="col-1 mx-auto border border-dark-subtle text-center">
+                        <button type="button" class="btn  selectBtn No26"> No.26 <br><br> 00:00 <br><br> 등록</button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="d-flex align-items flex-column mt-3">
+
+            <div class="card" style="width: 18rem; height:360px; border-radius:0.5em">
+
+                <div class="card-body">
+                    <p class="card-text mt-2 fw-semibold " style="color:gray"> 1. 학습실 이용 시간 </p>
+                    <p style="color:gray"> - 09:00 ~ 22:00 </p>
+                    <p style="color:gray"> - 매주 토,일 | 법정 공휴일은 <br> 도서관 휴관일 입니다.</p>
+
+                    <p class="card-text mt-2 fw-semibold" style="color:gray"> 2. 1인 1좌석만 이용 가능 합니다. </p>
+                    <p style="color:gray"> - 적발 시 자유 학습실 이용이 제한 <br> 될 수 있습니다. </p>
+
+                    <p class="card-text mt-2 fw-semibold" style="color:gray"> 3. 장시간 자리를 비울 시 <br> 꼭 퇴실하기 버튼을 눌러주세요.
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="card mt-4" style="width: 18rem;height:150px ; border-radius:0.5em">
+
+                <div class="card-body">
+                    <h5 class="card-title" style="color:gray" id="mySeat">로그인이 필요합니다.</h5>
+
+                    <p class="card-text mt-2" style="color:gray" id="mySeatCountTime"> 남은 이용 시간 | 00:00 </p>
+
+                    <button class="btn btn-success mt-1" disabled="disabled" id="TimePlusBtn"> 연장하기</button>
+                    <button class="btn btn-danger mt-1" disabled="disabled" id="TimeDelBtn"> 퇴실하기</button>
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+<div th:replace="fragments/footer::footer"></div>
+
+
+
+
+<script
+        src="https://code.jquery.com/jquery-3.7.0.js"
+        integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+        crossorigin="anonymous"></script>
+<script th:inline="javascript">
+
+
+    let seatCount = 0
+    window.onload = function() {
+        let list = [[${seatList}]]
+
+        if([[${seatList}]] != '0'){
+
+            for(let i = 0; i<list.length; i++){
+
+                let seatNum = list[i].seatNum.replace(".","")
+
+                 $('.' + seatNum).addClass("btn-success");
+                 $('.' + seatNum).css("color", "#FFFFFF");
+
+                 var str2 = $('.' + seatNum).html()
+
+                 var newStr = str2.replace('등록','이용중')
+                 var newStr2 = newStr.replace('00:00', list[i].seatCountTime)
+                 $('.' + seatNum).html(newStr2)
+
+                seatCount = list.length
+                $('#seatCount').text('남은 좌석 ' +  (26 - list.length) + '/26')
+
+            }
+
+        }
+
+        if([[${loginChk}]] == 'true'){
+
+
+            for(let i = 0; i<list.length; i++){
+
+            if(list[i].memberId == [[${memberId}]]){
+
+                let mySeat = list[i].seatNum.replace("No.", "")
+                $('#mySeat').text(`현재 ${mySeat}번 좌석 이용중`)
+                $('#mySeatCountTime').text(`남은 이용 시간 | ${list[i].seatCountTime}`)
+
+                $("#TimePlusBtn").prop("disabled", false);
+                $("#TimeDelBtn").prop("disabled", false);
+
+                break;
+
+            }else{
+                 $('#mySeat').text(`선택한 좌석이 없습니다.`)
+                $('#mySeatCountTime').text(`남은 이용 시간 | 00:00`)
+
+            }
+        }
+
+
+
+        }
+    };
+
+
+
+
+
+    $(document).on('click','.selectBtn' ,function(e){
+
+
+          if([[${loginChk}]] == 'true'){
+
+            if(e.target.innerHTML.includes('이용중')){
+                   alert('이용중인 좌석입니다.')
+            }else{
+
+
+            const str = e.target.innerText
+                const result = str.substr(0,5);
+                var seatNum = result.replace("\n","")
+                var rentalChk = confirm('해당 좌석을 선택하시겠습니까?')
+
+                if(rentalChk == true){
+
+                      $.ajax({
+                                    type:"POST",
+                                    url: '/rentalStudyRoom',
+                                    data : {
+                                        seatNum : seatNum,
+                                    },
+                                    dataType : 'json',
+                                    success:function(data){
+
+                                        if(data){
+                                                alert('퇴실 시 퇴실하기 버튼을 꼭 눌러주세요.')
+
+                                                $(e.target).addClass("btn-success");
+                                                $(e.target).css("color", "#FFFFFF");
+
+                                                var str2 = e.target.innerHTML
+
+                                                var newStr = str2.replace('등록','이용중')
+                                                var newStr2 = newStr.replace('00:00','03:00')
+                                                $(e.target).html(newStr2)
+
+
+                                                let seatStr = seatNum.replace('No.',"")
+
+                                                if(seatStr.length == 1){
+                                                    $('#mySeat').text(`현재 0${seatStr}번 좌석 이용중`)
+                                                }else{
+                                                   $('#mySeat').text(`현재 ${seatStr}번 좌석 이용중`)
+                                                }
+
+                                                $('#mySeatCountTime').text('남은 이용 시간 | 03:00')
+
+                                                $("#TimePlusBtn").prop("disabled", false);
+                                                $("#TimeDelBtn").prop("disabled", false);
+
+                                                seatCount += 1
+                                                $('#seatCount').text('남은 좌석 ' +  (26 - (seatCount)) + '/26')
+
+
+                                        }else{
+                                            alert('해당 학습실은 1인 1좌석 이용 가능합니다.')
+                                        }
+
+                                    },error : function(e){
+
+                                    }
+                                })
+
+
+
+            }else{
+
+            }
+
+
+
+            }
+
+           }else{
+                alert('로그인을 해주세요.')
+            }
+
+
+    })
+
+
+    $('#TimePlusBtn').click(function(){
+
+
+     let str = $('#mySeatCountTime').text()
+     let countTime = parseInt(str.substring(str.indexOf('|')+2,str.length).replace(":",""))
+
+     if(countTime >= 41){
+        alert('남은 이용 시간이 40분 이내 일때부터 연장 가능합니다.')
+     }else{
+
+        let text =  $('#mySeat').text()
+        let seatNum = 'No.'+text.substring(3,5)
+        let seatNumClass = '.No'+ seatNum.replace(".","").substring(2,5).replace(" ","")
+
+     $.ajax({
+                type:"PUT",
+                url: '/plusRentalTime',
+                  data : {
+                       seatNum : seatNum,
+                 },
+                success:function(){
+                    alert('이용시간 연장이 완료되었습니다.')
+
+                    $('#mySeatCountTime').text('남은 이용 시간 | 04:00')
+                    $(seatNumClass).html(`${seatNum} <br><br>  04:00 <br><br> 이용중`)
+
+
+                },error: function(e){
+
+                }
+            })
+
+     }
+
+
+
+    })
+
+    $('#TimeDelBtn').click(function(){
+
+
+        let clickChk = confirm('퇴실하시겠습니까?')
+        if(clickChk){
+
+
+        let seatNum =  $('#mySeat').text()
+        let seatNumClass = '.No'+ seatNum.substring(2,5).replace(" ","")
+
+
+
+            $.ajax({
+                type:"DELETE",
+                url: '/movingOut',
+                success:function(){
+                    alert('퇴실이 완료되었습니다.')
+
+                seatCount -= 1
+                $('#seatCount').text('남은 좌석 ' +  (26 - (seatCount)) + '/26')
+
+
+                $(seatNumClass).removeClass('btn-success');
+                $(seatNumClass).css("color", "black");
+
+
+                $(seatNumClass).html(`${'No.'+seatNum.substring(3,5)} <br><br>  00:00 <br><br> 등록`)
+
+
+                $("#TimePlusBtn").prop("disabled", true);
+                $("#TimeDelBtn").prop("disabled", true);
+
+
+                $('#mySeat').text(`선택한 좌석이 없습니다.`)
+                $('#mySeatCountTime').text(`남은 이용 시간 | 00:00`)
+
+                },error:function(e){
+                    alert('잠시 후에 다시 시도해주세요.')
+                }
+            })
+            }
+
+
+
+    })
+
+
+
+
+</script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,2238 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout" >
+<head>
+
+    <link href="../../static/bootstrap/css/bootstrap.min.css"
+          th:href="@{/bootstrap/css/bootstrap.min.css}"  rel="stylesheet" >
+    <script src="../../static/bootstrap/js/bootstrap.bundle.min.js"
+            th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+    <link href="css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet" />
+</head>
+
+<style>
+.accordion-button:not(.collapsed) {
+    color: black;
+    background-color: #ffffff;
+}
+
+.page-link {
+  color: #000;
+  background-color: #fff;
+  border: 1px solid #ccc;
+}
+
+
+.page-link:focus, .page-link:hover {
+  color: #000;
+background-color: #fafafa;
+  border-color: #ccc;
+}
+
+.list-group {
+    background-color:white
+}
+
+.list-group a{
+ background-color:white
+}
+
+.list-group-item:not(.active):not(.disabled) {
+    background-color: white
+}
+
+.list-group-item.active{
+ background-color: black;
+ color: white;
+ border-color: #ffffff;
+}
+
+
+</style>
+<body>
+
+<div th:replace="fragments/header::Main_header"></div>
+
+
+<div class="container mt-2 mb-2 ">
+
+    <div class="d-flex align-items flex-column">
+
+        <div class="row">
+            <div class="col-2">
+                <div class="list-group" style="border-radius : 10px" id="list-tab" role="tablist">
+                    <a class="list-group-item list-group-item-action active" style="height:50px;width:170px"
+                       id="list-home-list" data-bs-toggle="list" href="#list-home" role="tab" aria-controls="list-home">내
+                        정보</a>
+                    <a class="list-group-item list-group-item-action" style="height:50px;width:170px "
+                       id="list-messages-list" data-bs-toggle="list" href="#list-messages" role="tab"
+                       aria-controls="list-messages">대여/반납 내역</a>
+                    <a class="list-group-item list-group-item-action" style="height:50px;width:170px"
+                       id="list-settings-list2" data-bs-toggle="list" href="#list-settings2" role="tab"
+                       aria-controls="list-settings2">관심 도서 내역</a>
+                    <a class="list-group-item list-group-item-action" style="height:50px;width:170px"
+                       id="list-settings-list3" data-bs-toggle="list" href="#list-settings3" role="tab"
+                       aria-controls="list-settings3">희망 도서 내역</a>
+                    <a class="list-group-item list-group-item-action" style="height:50px;width:170px"
+                       id="list-settings-list" data-bs-toggle="list" href="#list-settings" role="tab"
+                       aria-controls="list-settings">학습실 이용 내역</a>
+                </div>
+            </div>
+            <div class="col-10 ">
+                <div class="tab-content " id="nav-tabContent" style="border-radius : 10px">
+
+                    <div class="tab-pane fade show active m-1 card" id="list-home" role="tabpanel"
+                         aria-labelledby="list-home-list">
+                        <div class="m-3">
+
+                            <dl class="row">
+                                <dt class="col-sm-2">아이디</dt>
+                                <dd class="col-sm-10">[[${memberDto.memberId}]]</dd>
+                                <dt class="col-sm-2">이름</dt>
+                                <dd class="col-sm-10"><p>[[${memberDto.memberName}]]</p>
+                                </dd>
+
+
+                                <dt class="col-sm-2">생년월일</dt>
+                                <dd class="col-sm-10">[[${memberDto.memberAge}]]</dd>
+
+                                <dt class="col-sm-2">전화번호</dt>
+                                <dd class="col-sm-10"><p>[[${memberDto.memberPhone}]]</p>
+                                </dd>
+
+                                <dt class="col-sm-2">주소</dt>
+                                <dd class="col-sm-10"><p>[[${memberDto.memberAddress}]]</p></dd>
+
+
+                                <dt class="col-sm-2 text-truncate">도서 대여 횟수</dt>
+                                <dd class="col-sm-10" id="rentalCount">[[${memberDto.bookRentalCount}]]회</dd>
+
+                                <dt class="col-sm-2 text-truncate">학습실 이용 횟수</dt>
+                                <dd class="col-sm-10"><p>[[${memberDto.studyRentalCount}]]회</p></dd>
+
+                                <dt class="col-sm-2 text-truncate">가입 날짜</dt>
+                                <dd class="col-sm-10" style="color:gray">[[${memberDto.memberDate}]]</dd>
+                            </dl>
+
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="tab-pane fade card" id="list-messages" role="tabpanel"
+                         aria-labelledby="list-messages-list">
+                        <div class="m-3">
+
+
+                            <h5 class="text-start">대여 중인 도서</h5>
+                            <hr>
+
+                            <div class="d-flex align-items flex-column ">
+
+                                <div class="d-flex justify-content-start" id="rentalHistory1">
+
+
+                                </div>
+
+                                <div class="d-flex justify-content-start" id="rentalHistory2">
+
+
+                                </div>
+
+
+                                <hr class="m-4">
+
+
+                                <div class="accordion" id="accordionPanelsStayOpenExample">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <div id="topView"></div>
+                                            <button class="accordion-button text-center" type="button"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
+                                                    aria-controls="panelsStayOpen-collapseOne">
+                                                반납 신청 도서
+                                            </button>
+                                        </h2>
+                                        <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
+                                            <div class="accordion-body">
+
+                                                <div id="returnHistoryList">
+                                                    <div class="card mt-3 " th:each="returnBook : ${returnDto}">
+
+                                                        <div class="d-flex justify-content-start">
+                                                            <div class="col-3 mt-3">
+                                                                <img th:src="${returnBook.bookInfoDTO.bookImg}"
+                                                                     class="d-block w-75 mx-auto" height="220px"
+                                                                     alt="...">
+                                                            </div>
+                                                            <div class="col-9 mt-2">
+                                                                <div class="d-flex align-items flex-column mt-2">
+
+                                                                    <div class="d-flex justify-content-start">
+                                                                        <div class="col-10">
+                                                                            <h5 class="fw-semibold"
+                                                                                th:text="${returnBook.bookInfoDTO.bookName}"></h5>
+                                                                        </div>
+
+                                                                        <div class="col-2">
+                                                                        </div>
+
+
+                                                                    </div>
+
+                                                                    <div class="mt-3">
+                                                                        <table class="table table-bordered">
+
+                                                                            <tbody class="table-group-divider">
+                                                                            <tr>
+                                                                                <th scope="row" class="table-active"
+                                                                                    style=" width: 250px;background-color:black;color:white">
+                                                                                    저자
+                                                                                </th>
+                                                                                <td th:text="${returnBook.bookInfoDTO.bookAuthor}"></td>
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                                <th scope="row" class="table-active "
+                                                                                    style=" width: 250px;background-color:black;color:white">
+                                                                                    카테고리
+                                                                                </th>
+                                                                                <td th:text="${returnBook.bookInfoDTO.bookCategory}"></td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th scope="row" class="table-active "
+                                                                                    style=" width: 250px;background-color:black;color:white">
+                                                                                    상태
+                                                                                </th>
+                                                                                <td>반납 확인중</td>
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                                <th scope="row" class="table-active"
+                                                                                    style=" width: 250px;background-color:black;color:white">
+                                                                                    반납일
+                                                                                </th>
+                                                                                <td th:text="${returnBook.returnDate}"></td>
+                                                                            </tr>
+                                                                            </tbody>
+                                                                        </table>
+
+                                                                    </div>
+                                                                    <div>
+                                                                        <div class="d-flex justify-content-center">
+                                                                            <div class="col-9">
+
+                                                                            </div>
+                                                                            <div class="col-3 mb-3 ">
+
+
+                                                                            </div>
+
+
+                                                                        </div>
+
+
+                                                                    </div>
+
+
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div id="returnHistoryPaging" th:if="${returnBookPage} != null">
+                                                    <nav aria-label="Page navigation example justify-content-end align-items-center">
+
+                                                        <ul class="pagination justify-content-center ">
+
+                                                            <li class="page-item" th:if="${returnBookPage.prev}">
+                                                                <a class="page-link returnRentalBtn" pageLink="pagelink"
+                                                                   th:data-num="${returnBookPage.start-1}">Previous</a>
+                                                            </li>
+
+                                                            <!-- 페이지 번호 표시 -->
+                                                            <th:block
+                                                                    th:each="i : ${#numbers.sequence(returnBookPage.start,returnBookPage.end)}">
+                                                                <li>
+                                                                    <th:block th:if="${returnBookPage.page == i}">
+                                                                        <div class="page-link active returnRentalBtn"
+                                                                             style="color: white;background-color: black; border-color: #ccc;"
+                                                                             th:data-num="${i}">[[${i}]]
+                                                                        </div>
+                                                                    </th:block>
+                                                                    <th:block th:unless="${returnBookPage.page == i}">
+                                                                        <a class="page-link returnRentalBtn"
+                                                                           th:data-num="${i}">[[${i}]]</a>
+                                                                    </th:block>
+                                                                </li>
+                                                            </th:block>
+                                                            <!-- ------- -->
+
+                                                            <li class="page-item" th:if="${returnBookPage.next}">
+                                                                <a class="page-link returnRentalBtn" pageLink="pagelink"
+                                                                   th:data-num="${returnBookPage.end+1}">Next</a>
+                                                            </li>
+                                                        </ul>
+                                                    </nav>
+
+
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <div id="topView2"></div>
+                                            <button class="accordion-button collapsed" type="button"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false"
+                                                    aria-controls="panelsStayOpen-collapseTwo">
+                                                반납 완료 도서
+                                            </button>
+                                        </h2>
+                                        <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse">
+                                            <div class="accordion-body">
+
+                                                <div id="returnCompleteHistoryList">
+                                                    <div class="card mt-3 " th:each="returnBook : ${returnCompleteDto}">
+                                                        <div class="d-flex justify-content-start">
+                                                            <div class="col-3 mt-3">
+                                                                <img th:src="${returnBook.bookInfoDTO.bookImg}"
+                                                                     class="d-block w-75 mx-auto" height="220px"
+                                                                     alt="...">
+                                                            </div>
+                                                            <div class="col-9 mt-2">
+                                                                <div class="d-flex align-items flex-column mt-2">
+
+                                                                    <div class="d-flex justify-content-start">
+                                                                        <div class="col-10">
+                                                                            <h5 class="fw-semibold"
+                                                                                th:text="${returnBook.bookInfoDTO.bookName}"></h5>
+                                                                        </div>
+
+                                                                        <div class="col-2">
+                                                                        </div>
+
+
+                                                                    </div>
+
+                                                                    <div class="mt-3">
+                                                                        <table class="table table-bordered">
+
+                                                                            <tbody class="table-group-divider">
+                                                                            <tr>
+                                                                                <th scope="row" class="table-active"
+                                                                                    style=" width: 250px;background-color:black;color:white">
+                                                                                    저자
+                                                                                </th>
+                                                                                <td th:text="${returnBook.bookInfoDTO.bookAuthor}"></td>
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                                <th scope="row" class="table-active "
+                                                                                    style=" width: 250px;background-color:black;color:white">
+                                                                                    카테고리
+                                                                                </th>
+                                                                                <td th:text="${returnBook.bookInfoDTO.bookCategory}"></td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th scope="row" class="table-active "
+                                                                                    style=" width: 250px;background-color:black;color:white">
+                                                                                    상태
+                                                                                </th>
+                                                                                <td>반납 완료</td>
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                                <th scope="row" class="table-active"
+                                                                                    style=" width: 250px;background-color:black;color:white">
+                                                                                    반납일
+                                                                                </th>
+                                                                                <td th:text="${returnBook.returnDate}"></td>
+                                                                            </tr>
+                                                                            </tbody>
+                                                                        </table>
+
+                                                                    </div>
+                                                                    <div>
+                                                                        <div class="d-flex justify-content-center">
+                                                                            <div class="col-9">
+
+                                                                            </div>
+                                                                            <div class="col-3 mb-3 ">
+
+
+                                                                            </div>
+
+
+                                                                        </div>
+
+
+                                                                    </div>
+
+
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div id="returnCompleteHistoryPaging"
+                                                     th:if="${returnCompleteBookPage} != null">
+                                                    <nav aria-label="Page navigation example justify-content-end align-items-center">
+
+                                                        <ul class="pagination justify-content-center ">
+
+                                                            <li class="page-item"
+                                                                th:if="${returnCompleteBookPage.prev}">
+                                                                <a class="page-link returnRentalCompleteBtn"
+                                                                   pageLink="pagelink"
+                                                                   th:data-num="${returnCompleteBookPage.start-1}">Previous</a>
+                                                            </li>
+
+                                                            <!-- 페이지 번호 표시 -->
+                                                            <th:block
+                                                                    th:each="i : ${#numbers.sequence(returnCompleteBookPage.start,returnCompleteBookPage.end)}">
+                                                                <li>
+                                                                    <th:block
+                                                                            th:if="${returnCompleteBookPage.page == i}">
+                                                                        <div class="page-link active returnRentalCompleteBtn"
+                                                                             style="color: white;background-color: black; border-color: #ccc;"
+                                                                             th:data-num="${i}">[[${i}]]
+                                                                        </div>
+                                                                    </th:block>
+                                                                    <th:block
+                                                                            th:unless="${returnCompleteBookPage.page == i}">
+                                                                        <a class="page-link returnRentalCompleteBtn"
+                                                                           th:data-num="${i}">[[${i}]]</a>
+                                                                    </th:block>
+                                                                </li>
+                                                            </th:block>
+                                                            <!-- ------- -->
+
+                                                            <li class="page-item"
+                                                                th:if="${returnCompleteBookPage.next}">
+                                                                <a class="page-link returnRentalCompleteBtn"
+                                                                   pageLink="pagelink"
+                                                                   th:data-num="${returnCompleteBookPage.end+1}">Next</a>
+                                                            </li>
+                                                        </ul>
+                                                    </nav>
+
+
+                                                </div>
+
+
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="tab-pane fade card" id="list-settings2" role="tabpanel"
+                         aria-labelledby="list-settings-list2">
+
+
+                        <div id="likeBook">
+                            <div id="bookLikeList">
+                                <div th:each="likeBook : ${likeDto}">
+                                    <div class="d-flex justify-content-start m-3">
+                                        <div class="col-1">
+                                            <img th:src="${likeBook.bookInfoDTO.bookImg}" height="100px" width="90px">
+                                        </div>
+                                        <div class="col-6 m-2">
+                                            <div class="d-flex align-items flex-column">
+                                                <div class="m-1 mt-0 ">
+                                                    <span class="fw-semibold"
+                                                          th:text="${likeBook.bookInfoDTO.bookName}"></span>
+                                                </div>
+                                                <div class="m-1 mt-0">
+                                                    <span th:text="|저자 : ${likeBook.bookInfoDTO.bookAuthor}|"></span>
+                                                </div>
+                                                <div class="m-1  mt-0">
+                                                    <span th:text="|카테고리 : ${likeBook.bookInfoDTO.bookCategory}|"></span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-3 m-2 mt-0 text-end">
+                                            <span style="color:gray" th:text="${likeBook.likeDate}"></span>
+                                        </div>
+                                        <div class="col-2 border-start ">
+                                            <div class="d-flex justify-content-center">
+                                                <div class="col-6">
+                                                    <a class="likeBtnRental mt-4 m-4 " style="color:white">
+                                                        <svg fill="#000000" height="40px" width="40px"
+                                                             th:data-info="${likeBook.bookInfoDTO.bookName}"
+                                                             version="1.1" id="Capa_1"
+                                                             xmlns="http://www.w3.org/2000/svg"
+                                                             xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                             viewBox="0 0 489.8 489.8" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                               stroke-linejoin="round"></g>
+                                                            <g id="SVGRepo_iconCarrier"> <g> <g> <path
+                                                                    d="M438.2,0H51.6C23.1,0,0,23.2,0,51.6v386.6c0,28.5,23.2,51.6,51.6,51.6h386.6c28.5,0,51.6-23.2,51.6-51.6V51.6 C489.8,23.2,466.6,0,438.2,0z M465.3,438.2c0,14.9-12.2,27.1-27.1,27.1H51.6c-14.9,0-27.1-12.2-27.1-27.1V51.6 c0-14.9,12.2-27.1,27.1-27.1h386.6c14.9,0,27.1,12.2,27.1,27.1V438.2z"></path>
+                                                                <path d="M337.4,232.7h-80.3v-80.3c0-6.8-5.5-12.3-12.3-12.3s-12.3,5.5-12.3,12.3v80.3h-80.3c-6.8,0-12.3,5.5-12.3,12.2 c0,6.8,5.5,12.3,12.3,12.3h80.3v80.3c0,6.8,5.5,12.3,12.3,12.3s12.3-5.5,12.3-12.3v-80.3h80.3c6.8,0,12.3-5.5,12.3-12.3 C349.7,238.1,344.2,232.7,337.4,232.7z"></path> </g> </g> </g></svg>
+                                                    </a>
+                                                </div>
+                                                <div class="col-6">
+                                                    <a class=" likeBtnDelete mt-4 m-2" style="color:white">
+                                                        <svg width="40px" height="40px" viewBox="0 0 24 24"
+                                                             th:data-info="${likeBook.bookInfoDTO.bookName}" fill="none"
+                                                             xmlns="http://www.w3.org/2000/svg">
+                                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                               stroke-linejoin="round"></g>
+                                                            <g id="SVGRepo_iconCarrier">
+                                                                <path d="M10 12L14 16M14 12L10 16M18 6L17.1991 18.0129C17.129 19.065 17.0939 19.5911 16.8667 19.99C16.6666 20.3412 16.3648 20.6235 16.0011 20.7998C15.588 21 15.0607 21 14.0062 21H9.99377C8.93927 21 8.41202 21 7.99889 20.7998C7.63517 20.6235 7.33339 20.3412 7.13332 19.99C6.90607 19.5911 6.871 19.065 6.80086 18.0129L6 6M4 6H20M16 6L15.7294 5.18807C15.4671 4.40125 15.3359 4.00784 15.0927 3.71698C14.8779 3.46013 14.6021 3.26132 14.2905 3.13878C13.9376 3 13.523 3 12.6936 3H11.3064C10.477 3 10.0624 3 9.70951 3.13878C9.39792 3.26132 9.12208 3.46013 8.90729 3.71698C8.66405 4.00784 8.53292 4.40125 8.27064 5.18807L8 6"
+                                                                      stroke="#000000" stroke-width="2"
+                                                                      stroke-linecap="round"
+                                                                      stroke-linejoin="round"></path>
+                                                            </g>
+                                                        </svg>
+                                                    </a>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                    <hr style="color:gray">
+
+                                </div>
+                            </div>
+
+                            <div id="likeBookPaging" th:if="${likeBookPage} != null">
+                                <nav aria-label="Page navigation example justify-content-end align-items-center">
+
+                                    <ul class="pagination justify-content-center ">
+
+                                        <li class="page-item" th:if="${likeBookPage.prev}">
+                                            <a class="page-link likeBookPagingBtn" pageLink="pagelink"
+                                               th:data-num="${likeBookPage.start-1}">Previous</a>
+                                        </li>
+
+                                        <!-- 페이지 번호 표시 -->
+                                        <th:block
+                                                th:each="i : ${#numbers.sequence(likeBookPage.start,likeBookPage.end)}">
+                                            <li>
+                                                <th:block th:if="${likeBookPage.page == i}">
+                                                    <div class="page-link active likeBookPagingBtn"
+                                                         style="color: white;background-color: black; border-color: #ccc;"
+                                                         th:data-num="${i}">[[${i}]]
+                                                    </div>
+                                                </th:block>
+                                                <th:block th:unless="${likeBookPage.page == i}">
+                                                    <a class="page-link likeBookPagingBtn"
+                                                       th:data-num="${i}">[[${i}]]</a>
+                                                </th:block>
+                                            </li>
+                                        </th:block>
+                                        <!-- ------- -->
+
+                                        <li class="page-item" th:if="${likeBookPage.next}">
+                                            <a class="page-link likeBookPagingBtn" pageLink="pagelink"
+                                               th:data-num="${likeBookPage.end+1}">Next</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+                    <div class="tab-pane fade card" id="list-settings3" role="tabpanel"
+                         aria-labelledby="list-settings-list3">
+
+                        <div id="hopeBook">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col" colspan="2">서명</th>
+                                    <th scope="col">저자</th>
+                                    <th scope="col">카테고리</th>
+                                    <th scope="col">출판사</th>
+                                    <th scope="col"></th>
+                                </tr>
+                                </thead>
+                                <tbody id="hopeBookList">
+
+                                <tr th:each="hopeBook : ${hopeDto}">
+                                    <th scope="row">#</th>
+                                    <td colspan="2" style="width: 25%" th:text="${hopeBook.bookInfoDTO.bookName}"></td>
+                                    <td style="width: 25%" th:text="${hopeBook.bookInfoDTO.bookAuthor}"></td>
+                                    <td style="width: 25%" th:text="${hopeBook.bookInfoDTO.bookCategory}"></td>
+                                    <td style="width: 10%" th:text="${hopeBook.bookInfoDTO.bookPublisher}"></td>
+                                    <td style="width: 15%">
+                                        <div class="d-flex justify-content-center">
+                                            <div class="col-6 m-1 mt-0 mb-0">
+
+
+                                            </div>
+                                            <div class="col-6">
+
+                                                <a class="hopeBtnDelete"
+                                                   th:data-info="${hopeBook.bookInfoDTO.bookName}">
+                                                    <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none"
+                                                         xmlns="http://www.w3.org/2000/svg">
+                                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                           stroke-linejoin="round"></g>
+                                                        <g id="SVGRepo_iconCarrier">
+                                                            <path d="M10 12L14 16M14 12L10 16M18 6L17.1991 18.0129C17.129 19.065 17.0939 19.5911 16.8667 19.99C16.6666 20.3412 16.3648 20.6235 16.0011 20.7998C15.588 21 15.0607 21 14.0062 21H9.99377C8.93927 21 8.41202 21 7.99889 20.7998C7.63517 20.6235 7.33339 20.3412 7.13332 19.99C6.90607 19.5911 6.871 19.065 6.80086 18.0129L6 6M4 6H20M16 6L15.7294 5.18807C15.4671 4.40125 15.3359 4.00784 15.0927 3.71698C14.8779 3.46013 14.6021 3.26132 14.2905 3.13878C13.9376 3 13.523 3 12.6936 3H11.3064C10.477 3 10.0624 3 9.70951 3.13878C9.39792 3.26132 9.12208 3.46013 8.90729 3.71698C8.66405 4.00784 8.53292 4.40125 8.27064 5.18807L8 6"
+                                                                  stroke="#000000" stroke-width="2"
+                                                                  stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        </g>
+                                                    </svg>
+
+                                                </a>
+                                            </div>
+
+                                        </div>
+
+
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+
+
+                            <div id="hopeBookPaging" th:if="${hopeBookPage} != null">
+                                <nav aria-label="Page navigation example justify-content-end align-items-center">
+
+                                    <ul class="pagination justify-content-center ">
+
+                                        <li class="page-item" th:if="${hopeBookPage.prev}">
+                                            <a class="page-link hopeBookPagingBtn" pageLink="pagelink"
+                                               th:data-num="${hopeBookPage.start-1}">Previous</a>
+                                        </li>
+
+                                        <!-- 페이지 번호 표시 -->
+                                        <th:block
+                                                th:each="i : ${#numbers.sequence(hopeBookPage.start,hopeBookPage.end)}">
+                                            <li>
+                                                <th:block th:if="${hopeBookPage.page == i}">
+                                                    <div class="page-link active hopeBookPagingBtn"
+                                                         style="color: white;background-color: black; border-color: #ccc;"
+                                                         th:data-num="${i}">[[${i}]]
+                                                    </div>
+                                                </th:block>
+                                                <th:block th:unless="${hopeBookPage.page == i}">
+                                                    <a class="page-link hopeBookPagingBtn"
+                                                       th:data-num="${i}">[[${i}]]</a>
+                                                </th:block>
+                                            </li>
+                                        </th:block>
+                                        <!-- ------- -->
+
+                                        <li class="page-item" th:if="${hopeBookPage.next}">
+                                            <a class="page-link hopeBookPagingBtn" pageLink="pagelink"
+                                               th:data-num="${hopeBookPage.end+1}">Next</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                    <div class="tab-pane fade card" id="list-settings" role="tabpanel"
+                         aria-labelledby="list-settings-list">
+                        <div class="m-4">
+
+
+                            <h5 class="text-start">학습실 이용 상태</h5>
+                            <hr>
+                            <dl class="row">
+                                <dt class="col-sm-3">상태</dt>
+                                <dd class="col-sm-9" th:if="${studyRoomUseChk} != null"
+                                    th:text="|${studyRoomUseChk.seatNum.replace('No.','')}번 좌석 이용 중 |"></dd>
+                                <dd class="col-sm-9" th:unless="${studyRoomUseChk} != null"> 이용 중인 좌석이 없습니다.</dd>
+                            </dl>
+
+                            <h5 class="text-start">학습실 이용 내역</h5>
+                            <hr>
+
+                            <div id="studyRoom">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col" colspan="2">이용좌석</th>
+                                        <th scope="col">시작 시간</th>
+                                        <th scope="col">종료 시간</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="studyRoomList">
+                                    <tr th:each="room : ${studyDto}">
+                                        <th scope="row" style="width: 10%">#</th>
+                                        <td colspan="2" style="width: 10%"
+                                            th:text="|${room.seatNum.replace('No.','')}번 좌석|"></td>
+                                        <td style="width: 25%" th:text="${room.historySeatStartDate}"></td>
+                                        <td style="width: 25%" th:text="${room.historySeatEndDate}"></td>
+                                    </tr>
+
+
+                                    </tbody>
+                                </table>
+
+
+                                <div id="studyRoomPaging" th:if="${studyRoomPage} != null">
+                                    <nav aria-label="Page navigation example justify-content-end align-items-center">
+
+                                        <ul class="pagination justify-content-center ">
+
+                                            <li class="page-item" th:if="${studyRoomPage.prev}">
+                                                <a class="page-link studyRoomPagingBtn" pageLink="pagelink"
+                                                   th:data-num="${studyRoomPage.start-1}">Previous</a>
+                                            </li>
+
+                                            <!-- 페이지 번호 표시 -->
+                                            <th:block
+                                                    th:each="i : ${#numbers.sequence(studyRoomPage.start,studyRoomPage.end)}">
+                                                <li>
+                                                    <th:block th:if="${studyRoomPage.page == i}">
+                                                        <div class="page-link active studyRoomPagingBtn"
+                                                             style="color: white;background-color: black; border-color: #ccc;"
+                                                             th:data-num="${i}">[[${i}]]
+                                                        </div>
+                                                    </th:block>
+                                                    <th:block th:unless="${studyRoomPage.page == i}">
+                                                        <a class="page-link studyRoomPagingBtn" th:data-num="${i}">[[${i}]]</a>
+                                                    </th:block>
+                                                </li>
+                                            </th:block>
+                                            <!-- ------- -->
+
+                                            <li class="page-item" th:if="${studyRoomPage.next}">
+                                                <a class="page-link studyRoomPagingBtn" pageLink="pagelink"
+                                                   th:data-num="${studyRoomPage.end+1}">Next</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+
+                                </div>
+
+
+                                <div id="studyRoomPaging2" th:unless="${studyRoomPage} != null">
+                                    <nav aria-label="Page navigation example justify-content-end align-items-center">
+
+                                        <ul class="pagination justify-content-center ">
+                                            <!-- 페이지 번호 표시 -->
+                                            <li>
+                                                <div class="page-link active likeBookPagingBtn"
+                                                     style="color: white;background-color: black; border-color: #ccc;"
+                                                     th:data-num="1">1
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+    </div>
+
+
+</div>
+
+
+</div>
+</div>
+<div th:replace="fragments/footer::footer"></div>
+
+
+</body>
+
+
+<script
+        src="https://code.jquery.com/jquery-3.7.0.js"
+        integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+        crossorigin="anonymous"></script>
+<script th:inline="javascript">
+
+
+
+
+
+
+let hopePage = 1
+let likePage = 1
+
+let returnBookCountVar =  [[${returnBookPage.total}]]
+
+      window.onload = function() {
+
+    data = [[${rentalDto}]]
+     let str = ""
+            let str2 = ""
+            for(let i = 0; i < data.length; i++){
+
+                if(i < 4){
+                str += "<div class='col-3 card' >"
+                             + "<div class='d-flex align-items flex-column '>"
+                                 +"<div style='height:100px'>"
+                                    + `<img src='${data[i].bookInfoDTO.bookImg}' class='d-block w-75 mx-auto mt-2'  height='100px' alt='...' >`
+                                 +"</div>"
+                                  +"<div class='mt-3 text-center ' style='height:50px'>"
+                                    + `<span class='fw-semibold mt-2 rentalBookName' > ${data[i].bookInfoDTO.bookName}</span>`
+                                 +"</div>"
+                                  +"<div class='mt-1 text-center' style='height:30px'>"
+                                  + `<span class=' mt-2 rentalCountDate'>반납기간 : ${data[i].rentalEndDate}</span>`
+                                 +"</div>"
+                                   +"<div style='height:35px;' class='text-center mb-2' >"
+                                    + `<button class='btn btn-outline-dark w-75  returningBtn'  value='${data[i].bookInfoDTO.bookName}' data-info='${data[i].bookInfoDTO.bookImg}' data-value='${data[i].bookInfoDTO.bookAuthor}' data-name='${data[i].bookInfoDTO.bookPublisher}'data-type='${data[i].bookInfoDTO.bookCategory}'>반납하기</button>`
+                                    +"</div>"
+                            + "</div>"
+                         + "</div>"
+                 }else{
+
+                  str2 += "<div class='col-3 card' >"
+                             + "<div class='d-flex align-items flex-column '>"
+                                             +"<div style='height:100px'>"
+                                    + `<img src='${data[i].bookInfoDTO.bookImg}' class='d-block w-75 mx-auto mt-2'  height='100px' alt='...' >`
+                                 +"</div>"
+                                  +"<div class='mt-3 text-center' style='height:50px'>"
+                                    + `<span class='fw-semibold mt-2 rentalBookName' > ${data[i].bookInfoDTO.bookName}</span>`
+                                 +"</div>"
+                                  +"<div class='mt-1 text-center' style='height:30px'>"
+                                  + `<span class=' mt-2 rentalCountDate'>반납기간 : ${data[i].rentalEndDate}</span>`
+                                 +"</div>"
+                                   +"<div style='height:35px;' class='text-center mb-2' >"
+                                        + `<button class='btn btn-outline-dark w-75  returningBtn'  value='${data[i].bookInfoDTO.bookName}' data-info='${data[i].bookInfoDTO.bookImg}' data-value='${data[i].bookInfoDTO.bookAuthor}' data-name='${data[i].bookInfoDTO.bookPublisher}'data-type='${data[i].bookInfoDTO.bookCategory}'>반납하기</button>`
+                                    +"</div>"
+                           + "</div>"
+                         + "</div>"
+
+
+             }
+
+         }
+
+
+
+          $('#rentalHistory1').html(str)
+
+           $('#rentalHistory2').html(str2)
+
+
+
+
+
+
+$(document).on('click','.likeBookPagingBtn' ,function(e){
+
+    let page = e.target.getAttribute("data-num") // datanum 속성의 값을 변수에 저장
+    likePage = page
+
+     $.ajax({
+                    type:"GET",
+                    url: "/likeBookHistory",
+                    data : {
+                        page : page,
+                        size : 5
+                    },
+                    dataType : 'json',
+                    success:function(data){
+
+                    let bookLikeCount = [[${likeBookPage}]]
+
+
+                 let str = ""
+                for(let i = 0; i < data.length; i++ ){
+
+                                         str += "<div>"
+                                            + "<div class='d-flex justify-content-start m-3'  >"
+                                                + "<div class='col-1'>"
+                                                    + `<img src='${data[i].bookInfoDTO.bookImg}' height='100px' width='90px'>`
+                                                + "</div>"
+                                                + "<div class='col-6 m-2'>"
+                                                    + "<div class='d-flex align-items flex-column'>"
+                                                        + "<div class='m-1 mt-0 '>"
+                                                            + `<span  class='fw-semibold'>${data[i].bookInfoDTO.bookName} </span>`
+                                                        + "</div>"
+                                                        + "<div class='m-1 mt-0' >"
+                                                            + `<span>저자 : ${data[i].bookInfoDTO.bookAuthor} </span>`
+                                                        + "</div>"
+                                                        + "<div class='m-1  mt-0'>"
+                                                            + `<span>카테고리 : ${data[i].bookInfoDTO.bookCategory}</span>`
+                                                        + "</div>"
+                                                    + "</div>"
+
+                                                + "</div>"
+                                                + "<div class='col-3 m-2 mt-0 text-end'>"
+                                                    + `<span style='color:gray'>${data[i].likeDate}</span>`
+                                                + "</div>"
+                                                + "<div class='col-2 border-start '>"
+                                                    + "<div class='d-flex justify-content-center'>"
+                                                        + "<div class='col-6'>"
+                                                            + `<a class='likeBtnRental mt-4 m-4 ' style='color:white' >`
+                                                                + `<svg fill='#000000'   data-info='${data[i].bookInfoDTO.bookName}'   height='40px' width='40px' version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 489.8 489.8' xml:space='preserve'>`+ "<g id='SVGRepo_bgCarrier' stroke-width='0'>"+ "</g>"+ "<g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'>"+ "</g>"+ "<g id='SVGRepo_iconCarrier'>" + "<g>" + "<g>" + "<path d='M438.2,0H51.6C23.1,0,0,23.2,0,51.6v386.6c0,28.5,23.2,51.6,51.6,51.6h386.6c28.5,0,51.6-23.2,51.6-51.6V51.6 C489.8,23.2,466.6,0,438.2,0z M465.3,438.2c0,14.9-12.2,27.1-27.1,27.1H51.6c-14.9,0-27.1-12.2-27.1-27.1V51.6 c0-14.9,12.2-27.1,27.1-27.1h386.6c14.9,0,27.1,12.2,27.1,27.1V438.2z'>"+ "</path>" + "<path d='M337.4,232.7h-80.3v-80.3c0-6.8-5.5-12.3-12.3-12.3s-12.3,5.5-12.3,12.3v80.3h-80.3c-6.8,0-12.3,5.5-12.3,12.2 c0,6.8,5.5,12.3,12.3,12.3h80.3v80.3c0,6.8,5.5,12.3,12.3,12.3s12.3-5.5,12.3-12.3v-80.3h80.3c6.8,0,12.3-5.5,12.3-12.3 C349.7,238.1,344.2,232.7,337.4,232.7z'>"+ "</path>" + "</g>" + "</g>" + "</g>"+ "</svg>"
+                                                            + "</a>"
+                                                        + "</div>"
+                                                        + "<div class='col-6'>"
+                                                            + `<a class=' likeBtnDelete mt-4 m-2' style='color:white' >`
+                                                                + `<svg width='40px' height='40px'  data-info='${data[i].bookInfoDTO.bookName}'  viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>`+ "<g id='SVGRepo_bgCarrier' stroke-width='0'>"+ "</g>"+ "<g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'>"+ "</g>"+ "<g id='SVGRepo_iconCarrier'>" + "<path d='M10 12L14 16M14 12L10 16M18 6L17.1991 18.0129C17.129 19.065 17.0939 19.5911 16.8667 19.99C16.6666 20.3412 16.3648 20.6235 16.0011 20.7998C15.588 21 15.0607 21 14.0062 21H9.99377C8.93927 21 8.41202 21 7.99889 20.7998C7.63517 20.6235 7.33339 20.3412 7.13332 19.99C6.90607 19.5911 6.871 19.065 6.80086 18.0129L6 6M4 6H20M16 6L15.7294 5.18807C15.4671 4.40125 15.3359 4.00784 15.0927 3.71698C14.8779 3.46013 14.6021 3.26132 14.2905 3.13878C13.9376 3 13.523 3 12.6936 3H11.3064C10.477 3 10.0624 3 9.70951 3.13878C9.39792 3.26132 9.12208 3.46013 8.90729 3.71698C8.66405 4.00784 8.53292 4.40125 8.27064 5.18807L8 6' stroke='#000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>"+ "</path>" + "</g>"+ "</svg>"
+                                                            + "</a>"
+                                                        + "</div>"
+                                                    + "</div>"
+
+
+                                                + "</div>"
+                                                    + "</div>"
+                                                    + "<hr style='color:gray'>"
+
+                                                + "</div>"
+
+
+
+                                            }
+                                             $('#bookLikeList').html(str)
+
+                                            if([[${likeBookPage}]] !== null){
+
+                                                $.ajax({
+                                                type:"GET",
+                                                url: '/searchBookPaging',
+                                                data: {
+                                                    page : page,
+                                                    size : 5,
+                                                    resultCount : bookLikeCount.total
+                                                },
+                                                dataType : 'json',
+                                                success:function(data){
+
+                                                 let str2 =  "<nav aria-label='Page navigation example justify-content-center align-items-center'>"
+                                                    +"<ul class='pagination justify-content-center ' >"
+                                                     if(data.prev == true){
+                                                        str2 += "<li class='page-item'>"
+                                                        + "<a class='page-link likeBookPagingBtn' pageLink='pagelink' data-num='" + (data.start - 1)  + "'> Previous </a>"
+                                                        + "</li>"
+                                                        }
+
+                                                    for(let i=data.start; i<=data.end; i++){
+
+                                                        str2 += "<li>"
+                                                        if(data.page == i ){
+                                                             str2 += "<div style='z-index: 1; color: #ccc; font-weight:bold; background-color: #333; border-color: #444;' class='page-link active likeBookPagingBtn'  data-num='" + i +  "'>" +  i + "</div>"
+                                                          }else{
+                                                                str2 += "<a class='page-link  likeBookPagingBtn'  data-num='" + i +  "'>" +  i + "</a>"
+                                                            }
+                                                        str2 +="</li>"
+                                                    }
+
+                                                    if(data.next == true){
+                                                        str2 += "<li class='page-item'>"
+                                                                 + "<a class='page-link likeBookPagingBtn' pageLink='pagelink' data-num='" + (data.end + 1)  + "'>  Next </a>"
+                                                                +"</li>"
+                                                    }
+                                                    str2 += "</ul>"
+                                                            +"</nav>"
+
+                                             $('#likeBookPaging').html(str2)
+
+                                            },
+                                            error:function(e){
+                                                alert('잠시 후 다시 시도해주세요2.')
+                                                console.log(e)
+                                            }
+                                        })
+                                        }
+                                            }, error:function(e){
+                                                        alert('잠시 후 다시 시도해주세요3.')
+                                                    }
+                                            })
+
+
+})
+
+
+$(document).on('click','.hopeBookPagingBtn' ,function(e){
+
+ let page = e.target.getAttribute("data-num") // datanum 속성의 값을 변수에 저장
+    hopePage = page
+
+     $.ajax({
+                    type:"GET",
+                    url: "/hopeBookHistory",
+                    data : {
+                        page : page,
+                        size : 8
+                    },
+                    dataType : 'json',
+                    success:function(data){
+
+
+                    $('#hopeBookList').html(" ")
+
+                    let hopeCount = [[${hopeBookPage}]]
+                let str = ""
+
+                       for(let i = 0; i < data.length; i++ ){
+
+
+                                                 str += "<tr>"
+                                                            + "<th scope='row'>" + "#" + "</th>"
+                                                                + `<td colspan='2' style='width: 25%'>${data[i].bookInfoDTO.bookName}</td>`
+                                                                + `<td style='width: 25%'>${data[i].bookInfoDTO.bookAuthor}</td>`
+                                                                + `<td style='width: 25%'>${data[i].bookInfoDTO.bookCategory}</td>`
+                                                                + `<td style='width: 10%'>${data[i].bookInfoDTO.bookPublisher}</td>`
+                                                                + "<td style='width: 15%'>"
+                                                                    + "<div class='d-flex justify-content-center'>"
+                                                                        + "<div class='col-6 m-1 mt-0 mb-0' >"
+
+                                                                        + "</div>"
+                                                                        + "<div class='col-6'>"
+                                                                            + "<a class='hopeBtnDelete'  >"
+                                                                            + `<svg width='40px' height='40px' data-info='${data[i].bookInfoDTO.bookName}' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>`+ "<g id='SVGRepo_bgCarrier' stroke-width='0'>"+ "</g>"+ "<g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'>"+ "</g>"+ "<g id='SVGRepo_iconCarrier'>" + "<path d='M10 12L14 16M14 12L10 16M18 6L17.1991 18.0129C17.129 19.065 17.0939 19.5911 16.8667 19.99C16.6666 20.3412 16.3648 20.6235 16.0011 20.7998C15.588 21 15.0607 21 14.0062 21H9.99377C8.93927 21 8.41202 21 7.99889 20.7998C7.63517 20.6235 7.33339 20.3412 7.13332 19.99C6.90607 19.5911 6.871 19.065 6.80086 18.0129L6 6M4 6H20M16 6L15.7294 5.18807C15.4671 4.40125 15.3359 4.00784 15.0927 3.71698C14.8779 3.46013 14.6021 3.26132 14.2905 3.13878C13.9376 3 13.523 3 12.6936 3H11.3064C10.477 3 10.0624 3 9.70951 3.13878C9.39792 3.26132 9.12208 3.46013 8.90729 3.71698C8.66405 4.00784 8.53292 4.40125 8.27064 5.18807L8 6' stroke='#000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>"+ "</path>" + "</g>"+ "</svg></a>"
+                                                                        + "</div>"
+                                                                    + "</div>"
+                                                                + "</td>"
+                                                            + "</tr>"
+                                }
+                                $('#hopeBookList').html(str)
+
+
+                                if([[${hopeBookPage}]] != null){
+
+                                 $.ajax({
+                                                type:"GET",
+                                                url: '/searchBookPaging',
+                                                data: {
+                                                    page : page,
+                                                    size : 8,
+                                                    resultCount : hopeCount.total
+                                                },
+                                                dataType : 'json',
+                                                success:function(data){
+
+                                                 let str2 =  "<nav aria-label='Page navigation example justify-content-center align-items-center'>"
+                                                +"<ul class='pagination justify-content-center ' >"
+                                                 if(data.prev == true){
+                                                    str2 += "<li class='page-item'>"
+                                                    + "<a class='page-link hopeBookPagingBtn' pageLink='pagelink' data-num='" + (data.start - 1)  + "'> Previous </a>"
+                                                    + "</li>"
+                                                    }
+
+                                                for(let i=data.start; i<=data.end; i++){
+
+                                                    str2 += "<li>"
+                                                    if(data.page == i ){
+                                                         str2 += "<div style='z-index: 1; color: #ccc; font-weight:bold; background-color: #333; border-color: #444;' class='page-link active hopeBookPagingBtn'  data-num='" + i +  "'>" +  i + "</div>"
+                                                  }else{
+                                                        str2 += "<a class='page-link  hopeBookPagingBtn'  data-num='" + i +  "'>" +  i + "</a>"
+                                                    }
+                                                    str2 +="</li>"
+                                                }
+
+                                                if(data.next == true){
+                                                    str2 += "<li class='page-item'>"
+                                                             + "<a class='page-link hopeBookPagingBtn' pageLink='pagelink' data-num='" + (data.end + 1)  + "'>  Next </a>"
+                                                            +"</li>"
+                                                }
+                                                str2 += "</ul>"
+                                                        +"</nav>"
+
+
+                                         $('#hopeBookPaging').html(str2)
+
+                                    },
+                                    error:function(){
+                                        alert('잠시 후 다시 시도해주세요.')
+                                    }
+                                })
+
+                            }
+                    },error:function(e){
+
+                    }
+
+     })
+
+
+})
+
+
+$(document).on('click','.studyRoomPagingBtn' ,function(e){
+
+
+ let page = e.target.getAttribute("data-num") // datanum 속성의 값을 변수에 저장
+
+     $.ajax({
+                    type:"GET",
+                    url: "/studyRoomHistory",
+                    data : {
+                        page : page,
+                        size : 5
+                    },
+                    dataType : 'json',
+                    success:function(data){
+
+                        let str = ""
+                        for(let i = 0; i <data.length; i++){
+                                 str += "<tr>"
+                                            + "<th scope='row' style='width: 10%'>" + "#" + "</th>"
+                                                + `<td colspan='2' style='width: 10%'>${data[i].seatNum.replace("No.","")}번 좌석 </td>`
+                                                + `<td style='width: 25%'>${data[i].historySeatStartDate}</td>`
+                                                + `<td style='width: 25%'>${data[i].historySeatEndDate}</td>`
+                                            + "</tr>"
+                                }
+
+                        $('#studyRoomList').html(str)
+
+                        if( [[${studyRoomPage}]] != null){
+
+                        $.ajax({
+                                type:"GET",
+                                url: '/searchBookPaging',
+                                data: {
+                                    page : page,
+                                    size : 5,
+                                    resultCount :  [[${studyRoomPage.total}]]
+                                },
+                                dataType : 'json',
+                                success:function(data){
+
+                                 let str2 =  "<nav aria-label='Page navigation example justify-content-center align-items-center'>"
+                                +"<ul class='pagination justify-content-center ' >"
+                                 if(data.prev == true){
+                                    str2 += "<li class='page-item'>"
+                                    + "<a class='page-link studyRoomPagingBtn' pageLink='pagelink' data-num='" + (data.start - 1)  + "'> Previous </a>"
+                                    + "</li>"
+                                    }
+
+                                for(let i=data.start; i<=data.end; i++){
+
+                                    str2 += "<li>"
+                                    if(data.page == i ){
+                                         str2 += "<div style='z-index: 1; color: #ccc; font-weight:bold; background-color: #333; border-color: #444;' class='page-link active studyRoomPagingBtn'  data-num='" + i +  "'>" +  i + "</div>"
+                                  }else{
+                                        str2 += "<a class='page-link  studyRoomPagingBtn'  data-num='" + i +  "'>" +  i + "</a>"
+                                    }
+                                    str2 +="</li>"
+                                }
+
+                                if(data.next == true){
+                                    str2 += "<li class='page-item'>"
+                                             + "<a class='page-link studyRoomPagingBtn' pageLink='pagelink' data-num='" + (data.end + 1)  + "'>  Next </a>"
+                                            +"</li>"
+                                }
+                                str2 += "</ul>"
+                                        +"</nav>"
+
+
+                         $('#studyRoomPaging').html(str2)
+                         },error:function(e){
+
+                                        }
+
+                                 })
+
+                    }
+                    },error:function(e){
+
+                    }
+
+             })
+
+
+
+
+
+})
+
+
+$(document).on('click','.returningBtn' ,function(e){
+
+
+
+   let chk = confirm("해당 도서를 반납하셨습니까?")
+
+   if(chk == true){
+
+            let bookName = e.target.getAttribute("value")
+            let bookImg = e.target.getAttribute("data-info")
+            let bookAuthor = e.target.getAttribute("data-value")
+            let bookPublisher = e.target.getAttribute("data-name")
+            let bookCategory = e.target.getAttribute("data-type")
+
+
+            $.ajax({
+                   type:"DELETE",
+                   url: '/returnRentalBook',
+                   dataType : 'text',
+                   data : {
+                    bookName : bookName,
+                    bookImg : bookImg,
+                    bookAuthor : bookAuthor,
+                    bookPublisher : bookPublisher,
+                    bookCategory : bookCategory,
+                    chk : false
+
+                   },
+                    success:function(data){
+
+                    returnBookCountVar = data
+
+
+
+                        alert("관리자 확인 후 반납 처리가 완료 됩니다.")
+
+
+                                        $.ajax({
+                                                type : 'GET',
+                                                url : '/rentalBookHistory',
+                                                dataType : 'JSON',
+                                                success:function(data){
+
+                                                let str = ""
+                                                let str2 = ""
+                                                for(let i = 0; i < data.length; i++){
+
+                                                    if(i < 4){
+                                                    str += "<div class='col-3 card' >"
+                                                                 + "<div class='d-flex align-items flex-column '>"
+                                                                     +"<div style='height:100px'>"
+                                                                        + `<img src='${data[i].bookInfoDTO.bookImg}' class='d-block w-75 mx-auto mt-2'  height='100px' alt='...' >`
+                                                                     +"</div>"
+                                                                      +"<div class='mt-3 text-center ' style='height:50px'>"
+                                                                        + `<span class='fw-semibold mt-2 rentalBookName' > ${data[i].bookInfoDTO.bookName}</span>`
+                                                                     +"</div>"
+                                                                      +"<div class='mt-1 text-center' style='height:30px'>"
+                                                                      + `<span class=' mt-2 rentalCountDate'>반납기간 : ${data[i].rentalEndDate}</span>`
+                                                                     +"</div>"
+                                                                       +"<div style='height:35px;' class='text-center mb-2' >"
+                                                                        + `<button class='btn btn-outline-dark w-75  returningBtn'  value='${data[i].bookInfoDTO.bookName}' data-info='${data[i].bookInfoDTO.bookImg}' data-value='${data[i].bookInfoDTO.bookAuthor}' data-name='${data[i].bookInfoDTO.bookPublisher}'data-type='${data[i].bookInfoDTO.bookCategory}'>반납하기</button>`
+                                                                        +"</div>"
+                                                                + "</div>"
+                                                             + "</div>"
+                                                     }else{
+
+                                                      str2 += "<div class='col-3 card' >"
+                                                                 + "<div class='d-flex align-items flex-column '>"
+                                                                     +"<div style='height:100px'>"
+                                                                        + `<img src='${data[i].bookInfoDTO.bookImg}' class='d-block w-75 mx-auto mt-2'  height='100px' alt='...' >`
+                                                                     +"</div>"
+                                                                      +"<div class='mt-3 text-center ' style='height:50px'>"
+                                                                        + `<span class='fw-semibold mt-2 rentalBookName' > ${data[i].bookInfoDTO.bookName}</span>`
+                                                                     +"</div>"
+                                                                      +"<div class='mt-1 text-center' style='height:30px'>"
+                                                                      + `<span class=' mt-2 rentalCountDate'>반납기간 : ${data[i].rentalEndDate}</span>`
+                                                                     +"</div>"
+                                                                       +"<div style='height:35px;' class='text-center mb-2' >"
+                                                                        + `<button class='btn btn-outline-dark w-75  returningBtn'  value='${data[i].bookInfoDTO.bookName}' data-info='${data[i].bookInfoDTO.bookImg}' data-value='${data[i].bookInfoDTO.bookAuthor}' data-name='${data[i].bookInfoDTO.bookPublisher}'data-type='${data[i].bookInfoDTO.bookCategory}'>반납하기</button>`
+                                                                        +"</div>"
+                                                                + "</div>"
+                                                             + "</div>"
+
+
+                                                 }
+
+                                             }
+
+                                                $('#rentalHistory1').html(str)
+
+                                                $('#rentalHistory2').html(str2)
+
+                                                $.ajax({
+                                                   type:"GET",
+                                                   url: '/returnRentalBookHistory',
+                                                   dataType : 'JSON',
+                                                   data : {
+                                                    page : 1,
+                                                    size: 5,
+                                                    chk : false
+                                                   },
+                                                    success:function(data){
+
+
+                                                    let str = ""
+                                                       for(let i = 0; i <data.length; i++){
+                                                         str += "<div class='card mt-3'>"
+                                                         + "<div class='d-flex justify-content-start'>"
+                                                                + "<div class='col-3 mt-3'>"
+                                                                    + `<img src='${data[i].bookInfoDTO.bookImg}' class='d-block w-75 mx-auto'  height='220px' alt='...'>`
+                                                                + "</div>"
+                                                                + "<div class='col-9 mt-2'>"
+                                                                    + "<div class='d-flex align-items flex-column mt-2'>"
+
+                                                                        + "<div class='d-flex justify-content-start'>"
+                                                                            + "<div class='col-10'>"
+                                                                                + `<h5 class='fw-semibold'>${data[i].bookInfoDTO.bookName}</h5>`
+                                                                            + "</div>"
+                                                                            + "<div class='col-2'>"
+                                                                            + "</div>"
+                                                                        + "</div>"
+                                                                        + "<div class='mt-3'>"
+                                                                            + "<table class='table table-bordered'>"
+
+                                                                                + "<tbody class='table-group-divider'>"
+                                                                                + "<tr>"
+                                                                                    + "<th scope='row' class='table-active'  style=' width: 250px;background-color:black;color:white'>"+ "저자" + "</th>"
+                                                                                    + `<td>${data[i].bookInfoDTO.bookAuthor} </td>`
+                                                                                + "</tr>"
+
+                                                                                + "<tr>"
+                                                                                    + "<th scope='row' class='table-active 'style=' width: 250px;background-color:black;color:white'>"+ "카테고리"+ "</th>"
+                                                                                    + `<td>${data[i].bookInfoDTO.bookCategory}</td>`
+                                                                                + "</tr>"
+                                                                                + "<tr>"
+                                                                                    + "<th scope='row' class='table-active ' style=' width: 250px;background-color:black;color:white'>"+"상태"+ "</th>"
+                                                                                    + "<td>" + "반납 확인중" + "</td>"
+                                                                                + "</tr>"
+
+                                                                                + "<tr>"
+                                                                                    + "<th scope='row' class='table-active' style=' width: 250px;background-color:black;color:white'>"+"반납일"+ "</th>"
+                                                                                    + `<td>${data[i].returnDate} </td>`
+                                                                                + "</tr>"
+                                                                                + "</tbody>"
+                                                                            + "</table>"
+
+                                                                        + "</div>"
+                                                                        + "<div>"
+                                                                            + "<div class='d-flex justify-content-center'>"
+                                                                                + "<div class='col-9'>"
+
+                                                                                + "</div>"
+                                                                                + "<div class='col-3 mb-3 '>"
+
+                                                                                + "</div>"
+                                                                            + "</div>"
+                                                                        + "</div>"
+                                                                    + "</div>"
+                                                                + "</div>"
+                                                            + "</div>"
+                                                            +"</div>"
+                                                        }
+
+                                                $('#returnHistoryList').html(str)
+
+
+                                                 $.ajax({
+                                                    type:"GET",
+                                                    url: '/searchBookPaging',
+                                                    data: {
+                                                        page : 1,
+                                                        size : 5,
+                                                        resultCount : returnBookCountVar
+                                                    },
+                                                    dataType : 'json',
+                                                    success:function(data){
+
+                                                     let str2 =  "<nav aria-label='Page navigation example justify-content-center align-items-center'>"
+                                                    +"<ul class='pagination justify-content-center ' >"
+                                                     if(data.prev == true){
+                                                        str2 += "<li class='page-item'>"
+                                                        + "<a class='page-link returnRentalBtn' pageLink='pagelink' data-num='" + (data.start - 1)  + "'> Previous </a>"
+                                                        + "</li>"
+                                                        }
+
+                                                    for(let i=data.start; i<=data.end; i++){
+
+                                                        str2 += "<li>"
+                                                        if(data.page == i ){
+                                                             str2 += "<div style='z-index: 1; color: #ccc; font-weight:bold; background-color: #333; border-color: #444;' class='page-link active returnRentalBtn'  data-num='" + i +  "'>" +  i + "</div>"
+                                                      }else{
+                                                            str2 += "<a class='page-link  returnRentalBtn'  data-num='" + i +  "'>" +  i + "</a>"
+                                                        }
+                                                        str2 +="</li>"
+                                                    }
+
+                                                    if(data.next == true){
+                                                        str2 += "<li class='page-item'>"
+                                                                 + "<a class='page-link returnRentalBtn' pageLink='pagelink' data-num='" + (data.end + 1)  + "'>  Next </a>"
+                                                                +"</li>"
+                                                    }
+                                                    str2 += "</ul>"
+                                                            +"</nav>"
+
+
+                                             $('#returnHistoryPaging').html(str2)
+
+                                        },
+                                        error:function(){
+                                            alert('잠시 후 다시 시도해주세요.')
+                                        }
+                                    })
+
+
+
+                                                    },error:function(e){
+                                                    alert('잠시 후에 다시 시도해주세요.')
+
+                                                    }})
+
+
+                                                },error:function(e){
+                                                    alert('잠시 후에 다시 시도해주세요1.')
+
+                                                }
+                                             })
+
+
+
+
+                    },error:function(e){
+
+
+                    }
+
+
+             })
+
+
+
+
+   }
+
+
+})
+
+
+$(document).on('click','.returnRentalCompleteBtn' ,function(e){
+
+     let top = document.getElementById("topView2");
+     top.scrollIntoView();
+
+ let page = e.target.getAttribute("data-num") // datanum 속성의 값을 변수에 저장
+
+     $.ajax({
+                    type:"GET",
+                    url: "/returnRentalBookHistory",
+                    data : {
+                        page : page,
+                        size : 5,
+                        chk : true
+                    },
+                    dataType : 'json',
+                    success:function(data){
+
+                    let returnBookCount =  [[${returnCompleteBookPage}]]
+                     let returnDto = data
+
+                   let returnStr = ""
+                   for(let i = 0; i <returnDto.length; i++){
+                                         returnStr += "<div class='card mt-3'>"
+                                                         + "<div class='d-flex justify-content-start'>"
+                                                                + "<div class='col-3 mt-3'>"
+                                                                    + `<img src='${data[i].bookInfoDTO.bookImg}' class='d-block w-75 mx-auto'  height='220px' alt='...'>`
+                                                                + "</div>"
+                                                                + "<div class='col-9 mt-2'>"
+                                                                    + "<div class='d-flex align-items flex-column mt-2'>"
+
+                                                                        + "<div class='d-flex justify-content-start'>"
+                                                                            + "<div class='col-10'>"
+                                                                                + `<h5 class='fw-semibold'>${data[i].bookInfoDTO.bookName}</h5>`
+                                                                            + "</div>"
+                                                                            + "<div class='col-2'>"
+                                                                            + "</div>"
+                                                                        + "</div>"
+                                                                        + "<div class='mt-3'>"
+                                                                            + "<table class='table table-bordered'>"
+
+                                                                                + "<tbody class='table-group-divider'>"
+                                                                                + "<tr>"
+                                                                                    + "<th scope='row' class='table-active'  style=' width: 250px;background-color:black;color:white'>"+ "저자" + "</th>"
+                                                                                    + `<td>${data[i].bookInfoDTO.bookAuthor} </td>`
+                                                                                + "</tr>"
+
+                                                                                + "<tr>"
+                                                                                    + "<th scope='row' class='table-active 'style=' width: 250px;background-color:black;color:white'>"+ "카테고리"+ "</th>"
+                                                                                    + `<td>${data[i].bookInfoDTO.bookCategory}</td>`
+                                                                                + "</tr>"
+                                                                                + "<tr>"
+                                                                                    + "<th scope='row' class='table-active ' style=' width: 250px;background-color:black;color:white'>"+"상태"+ "</th>"
+                                                                                    + "<td>" + "반납 완료" + "</td>"
+                                                                                + "</tr>"
+
+                                                                                + "<tr>"
+                                                                                    + "<th scope='row' class='table-active' style=' width: 250px;background-color:black;color:white'>"+"반납일"+ "</th>"
+                                                                                    + `<td>${data[i].returnDate} </td>`
+                                                                                + "</tr>"
+                                                                                + "</tbody>"
+                                                                            + "</table>"
+
+                                                                        + "</div>"
+                                                                        + "<div>"
+                                                                            + "<div class='d-flex justify-content-center'>"
+                                                                                + "<div class='col-9'>"
+
+                                                                                + "</div>"
+                                                                                + "<div class='col-3 mb-3 '>"
+
+                                                                                + "</div>"
+                                                                            + "</div>"
+                                                                        + "</div>"
+                                                                    + "</div>"
+                                                                + "</div>"
+                                                            + "</div>"
+                                                            +"</div>"
+                                        }
+
+                                $('#returnCompleteHistoryList').html(returnStr)
+
+                                if([[${returnCompleteBookPage}]] != null){
+                                $.ajax({
+                                        type:"GET",
+                                        url: '/searchBookPaging',
+                                        data: {
+                                            page : page,
+                                            size : 5,
+                                            resultCount : returnBookCount.total
+                                        },
+                                        dataType : 'json',
+                                        success:function(data){
+
+                                         let str2 =  "<nav aria-label='Page navigation example justify-content-center align-items-center'>"
+                                        +"<ul class='pagination justify-content-center ' >"
+                                         if(data.prev == true){
+                                            str2 += "<li class='page-item'>"
+                                            + "<a class='page-link returnRentalCompleteBtn' pageLink='pagelink' data-num='" + (data.start - 1)  + "'> Previous </a>"
+                                            + "</li>"
+                                            }
+
+                                        for(let i=data.start; i<=data.end; i++){
+
+                                            str2 += "<li>"
+                                            if(data.page == i ){
+                                                 str2 += "<div style='z-index: 1; color: #ccc; font-weight:bold; background-color: #333; border-color: #444;' class='page-link active returnRentalCompleteBtn'  data-num='" + i +  "'>" +  i + "</div>"
+                                          }else{
+                                                str2 += "<a class='page-link  returnRentalCompleteBtn'  data-num='" + i +  "'>" +  i + "</a>"
+                                            }
+                                            str2 +="</li>"
+                                        }
+
+                                        if(data.next == true){
+                                            str2 += "<li class='page-item'>"
+                                                     + "<a class='page-link returnRentalCompleteBtn' pageLink='pagelink' data-num='" + (data.end + 1)  + "'>  Next </a>"
+                                                    +"</li>"
+                                        }
+                                        str2 += "</ul>"
+                                                +"</nav>"
+
+
+                                 $('#returnCompleteHistoryPaging').html(str2)
+
+                            },
+                            error:function(){
+                                alert('잠시 후 다시 시도해주세요.')
+                            }
+                        })
+
+                    }
+
+                    },error:function(e){
+
+
+                    }
+
+             })
+
+
+
+})
+
+
+
+$(document).on('click','.returnRentalBtn' ,function(e){
+
+
+   let top = document.getElementById("topView");
+     top.scrollIntoView();
+
+
+ let page = e.target.getAttribute("data-num") // datanum 속성의 값을 변수에 저장
+
+     $.ajax({
+                    type:"GET",
+                    url: "/returnRentalBookHistory",
+                    data : {
+                        page : page,
+                        size : 5,
+                        chk : false
+                    },
+                    dataType : 'json',
+                    success:function(data){
+
+
+                     let returnDto = data
+
+                   let returnStr = " "
+                   for(let i = 0; i <returnDto.length; i++){
+                                         returnStr += "<div class='card mt-3'>"
+                                          + "<div class='d-flex justify-content-start'>"
+                                                                + "<div class='col-3 mt-3'>"
+                                                                    + `<img src='${data[i].bookInfoDTO.bookImg}' class='d-block w-75 mx-auto'  height='220px' alt='...'>`
+                                                                + "</div>"
+                                                                + "<div class='col-9 mt-2'>"
+                                                                    + "<div class='d-flex align-items flex-column mt-2'>"
+
+                                                                        + "<div class='d-flex justify-content-start'>"
+                                                                            + "<div class='col-10'>"
+                                                                                + `<h5 class='fw-semibold'>${data[i].bookInfoDTO.bookName}</h5>`
+                                                                            + "</div>"
+                                                                            + "<div class='col-2'>"
+                                                                            + "</div>"
+                                                                        + "</div>"
+                                                                        + "<div class='mt-3'>"
+                                                                            + "<table class='table table-bordered'>"
+
+                                                                                + "<tbody class='table-group-divider'>"
+                                                                                + "<tr>"
+                                                                                    + "<th scope='row' class='table-active'  style=' width: 250px;background-color:black;color:white'>"+ "저자" + "</th>"
+                                                                                    + `<td>${data[i].bookInfoDTO.bookAuthor} </td>`
+                                                                                + "</tr>"
+
+                                                                                + "<tr>"
+                                                                                    + "<th scope='row' class='table-active 'style=' width: 250px;background-color:black;color:white'>"+ "카테고리"+ "</th>"
+                                                                                    + `<td>${data[i].bookInfoDTO.bookCategory}</td>`
+                                                                                + "</tr>"
+                                                                                + "<tr>"
+                                                                                    + "<th scope='row' class='table-active ' style=' width: 250px;background-color:black;color:white'>"+"상태"+ "</th>"
+                                                                                    + "<td>" + "반납 확인중" + "</td>"
+                                                                                + "</tr>"
+
+                                                                                + "<tr>"
+                                                                                    + "<th scope='row' class='table-active' style=' width: 250px;background-color:black;color:white'>"+"반납일"+ "</th>"
+                                                                                    + `<td>${data[i].returnDate} </td>`
+                                                                                + "</tr>"
+                                                                                + "</tbody>"
+                                                                            + "</table>"
+
+                                                                        + "</div>"
+                                                                        + "<div>"
+                                                                            + "<div class='d-flex justify-content-center'>"
+                                                                                + "<div class='col-9'>"
+
+                                                                                + "</div>"
+                                                                                + "<div class='col-3 mb-3 '>"
+
+                                                                                + "</div>"
+                                                                            + "</div>"
+                                                                        + "</div>"
+                                                                    + "</div>"
+                                                                + "</div>"
+                                                            + "</div>"
+                                                            +"</div>"
+                                        }
+
+                                $('#returnHistoryList').html(returnStr)
+
+                                if(returnBookCountVar!= 0){
+                                $.ajax({
+                                        type:"GET",
+                                        url: '/searchBookPaging',
+                                        data: {
+                                            page : page,
+                                            size : 5,
+                                            resultCount : returnBookCountVar
+                                        },
+                                        dataType : 'json',
+                                        success:function(data){
+
+                                         let str2 =  "<nav aria-label='Page navigation example justify-content-center align-items-center'>"
+                                        +"<ul class='pagination justify-content-center ' >"
+                                         if(data.prev == true){
+                                            str2 += "<li class='page-item'>"
+                                            + "<a class='page-link returnRentalBtn' pageLink='pagelink' data-num='" + (data.start - 1)  + "'> Previous </a>"
+                                            + "</li>"
+                                            }
+
+                                        for(let i=data.start; i<=data.end; i++){
+
+                                            str2 += "<li>"
+                                            if(data.page == i ){
+                                                 str2 += "<div style='z-index: 1; color: #ccc; font-weight:bold; background-color: #333; border-color: #444;' class='page-link active returnRentalBtn'  data-num='" + i +  "'>" +  i + "</div>"
+                                          }else{
+                                                str2 += "<a class='page-link  returnRentalBtn'  data-num='" + i +  "'>" +  i + "</a>"
+                                            }
+                                            str2 +="</li>"
+                                        }
+
+                                        if(data.next == true){
+                                            str2 += "<li class='page-item'>"
+                                                     + "<a class='page-link returnRentalBtn' pageLink='pagelink' data-num='" + (data.end + 1)  + "'>  Next </a>"
+                                                    +"</li>"
+                                        }
+                                        str2 += "</ul>"
+                                                +"</nav>"
+
+
+                                 $('#returnHistoryPaging').html(str2)
+
+                            },
+                            error:function(){
+                                alert('잠시 후 다시 시도해주세요.')
+                            }
+                        })
+
+                    }
+
+                    },error:function(e){
+
+
+                    }
+
+             })
+
+
+
+})
+}
+
+
+
+$(document).on('click','.likeBtnDelete' ,function(e){
+
+
+    let chk = confirm('해당 도서를 관심 도서 목록에서 삭제하시겠습니까?')
+
+    if(chk){
+    let bookName = e.target.getAttribute("data-info")
+
+
+    $.ajax({
+        type : 'DELETE',
+        url : '/likeBookDelete',
+        dataType : 'text',
+        data : {
+               bookName : bookName
+        },success:function(data){
+            alert(' 관심 도서 목록에서 해당 도서가 삭제 되었습니다.')
+
+            likeCount = data
+
+            $.ajax({
+                    type:"GET",
+                    url: "/likeBookHistory",
+                    data : {
+                        page : likePage,
+                        size : 5
+                    },
+                    dataType : 'json',
+                    success:function(data){
+
+
+                 let str = ""
+                for(let i = 0; i < data.length; i++ ){
+
+                                         str +="<div>"
+                                            + "<div class='d-flex justify-content-start m-3'  >"
+                                                + "<div class='col-1'>"
+                                                    + `<img src='${data[i].bookInfoDTO.bookImg}' height='100px' width='90px'>`
+                                                + "</div>"
+                                                + "<div class='col-6 m-2'>"
+                                                    + "<div class='d-flex align-items flex-column'>"
+                                                        + "<div class='m-1 mt-0 '>"
+                                                            + `<span  class='fw-semibold'>${data[i].bookInfoDTO.bookName} </span>`
+                                                        + "</div>"
+                                                        + "<div class='m-1 mt-0' >"
+                                                            + `<span>저자 : ${data[i].bookInfoDTO.bookAuthor} </span>`
+                                                        + "</div>"
+                                                        + "<div class='m-1  mt-0'>"
+                                                            + `<span>카테고리 : ${data[i].bookInfoDTO.bookCategory}</span>`
+                                                        + "</div>"
+                                                    + "</div>"
+
+                                                + "</div>"
+                                                + "<div class='col-3 m-2 mt-0 text-end'>"
+                                                    + `<span style='color:gray'>${data[i].likeDate}</span>`
+                                                + "</div>"
+                                                + "<div class='col-2 border-start '>"
+                                                    + "<div class='d-flex justify-content-center'>"
+                                                        + "<div class='col-6'>"
+                                                            + `<a class='likeBtnRental mt-4 m-4 ' style='color:white' >`
+                                                                + `<svg fill='#000000'   data-info='${data[i].bookInfoDTO.bookName}'   height='40px' width='40px' version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 489.8 489.8' xml:space='preserve'>`+ "<g id='SVGRepo_bgCarrier' stroke-width='0'>"+ "</g>"+ "<g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'>"+ "</g>"+ "<g id='SVGRepo_iconCarrier'>" + "<g>" + "<g>" + "<path d='M438.2,0H51.6C23.1,0,0,23.2,0,51.6v386.6c0,28.5,23.2,51.6,51.6,51.6h386.6c28.5,0,51.6-23.2,51.6-51.6V51.6 C489.8,23.2,466.6,0,438.2,0z M465.3,438.2c0,14.9-12.2,27.1-27.1,27.1H51.6c-14.9,0-27.1-12.2-27.1-27.1V51.6 c0-14.9,12.2-27.1,27.1-27.1h386.6c14.9,0,27.1,12.2,27.1,27.1V438.2z'>"+ "</path>" + "<path d='M337.4,232.7h-80.3v-80.3c0-6.8-5.5-12.3-12.3-12.3s-12.3,5.5-12.3,12.3v80.3h-80.3c-6.8,0-12.3,5.5-12.3,12.2 c0,6.8,5.5,12.3,12.3,12.3h80.3v80.3c0,6.8,5.5,12.3,12.3,12.3s12.3-5.5,12.3-12.3v-80.3h80.3c6.8,0,12.3-5.5,12.3-12.3 C349.7,238.1,344.2,232.7,337.4,232.7z'>"+ "</path>" + "</g>" + "</g>" + "</g>"+ "</svg>"
+                                                            + "</a>"
+                                                        + "</div>"
+                                                        + "<div class='col-6'>"
+                                                            + `<a class=' likeBtnDelete mt-4 m-2' style='color:white' >`
+                                                                + `<svg width='40px' height='40px'  data-info='${data[i].bookInfoDTO.bookName}'  viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>`+ "<g id='SVGRepo_bgCarrier' stroke-width='0'>"+ "</g>"+ "<g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'>"+ "</g>"+ "<g id='SVGRepo_iconCarrier'>" + "<path d='M10 12L14 16M14 12L10 16M18 6L17.1991 18.0129C17.129 19.065 17.0939 19.5911 16.8667 19.99C16.6666 20.3412 16.3648 20.6235 16.0011 20.7998C15.588 21 15.0607 21 14.0062 21H9.99377C8.93927 21 8.41202 21 7.99889 20.7998C7.63517 20.6235 7.33339 20.3412 7.13332 19.99C6.90607 19.5911 6.871 19.065 6.80086 18.0129L6 6M4 6H20M16 6L15.7294 5.18807C15.4671 4.40125 15.3359 4.00784 15.0927 3.71698C14.8779 3.46013 14.6021 3.26132 14.2905 3.13878C13.9376 3 13.523 3 12.6936 3H11.3064C10.477 3 10.0624 3 9.70951 3.13878C9.39792 3.26132 9.12208 3.46013 8.90729 3.71698C8.66405 4.00784 8.53292 4.40125 8.27064 5.18807L8 6' stroke='#000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>"+ "</path>" + "</g>"+ "</svg>"
+                                                            + "</a>"
+                                                        + "</div>"
+                                                    + "</div>"
+
+
+                                                + "</div>"
+                                                    + "</div>"
+                                                    + "<hr style='color:gray'>"
+
+                                                + "</div>"
+
+
+                                            }
+                                             $('#bookLikeList').html(str)
+
+                                            if(likeCount != 0){
+                                                $.ajax({
+                                                type:"GET",
+                                                url: '/searchBookPaging',
+                                                data: {
+                                                    page : likePage,
+                                                    size : 5,
+                                                    resultCount : likeCount
+                                                },
+                                                dataType : 'json',
+                                                success:function(data){
+
+                                                 let str2 =  "<nav aria-label='Page navigation example justify-content-center align-items-center'>"
+                                                    +"<ul class='pagination justify-content-center ' >"
+                                                     if(data.prev == true){
+                                                        str2 += "<li class='page-item'>"
+                                                        + "<a class='page-link likeBookPagingBtn' pageLink='pagelink' data-num='" + (data.start - 1)  + "'> Previous </a>"
+                                                        + "</li>"
+                                                        }
+
+                                                    for(let i=data.start; i<=data.end; i++){
+
+                                                        str2 += "<li>"
+                                                        if(data.page == i ){
+                                                             str2 += "<div style='z-index: 1; color: #ccc; font-weight:bold; background-color: #333; border-color: #444;' class='page-link active likeBookPagingBtn'  data-num='" + i +  "'>" +  i + "</div>"
+                                                      }else{
+                                                            str2 += "<a class='page-link  likeBookPagingBtn'  data-num='" + i +  "'>" +  i + "</a>"
+                                                        }
+                                                        str2 +="</li>"
+                                                    }
+
+                                                    if(data.next == true){
+                                                        str2 += "<li class='page-item'>"
+                                                                 + "<a class='page-link likeBookPagingBtn' pageLink='pagelink' data-num='" + (data.end + 1)  + "'>  Next </a>"
+                                                                +"</li>"
+                                                    }
+                                                    str2 += "</ul>"
+                                                            +"</nav>"
+
+                                             $('#likeBookPaging').html(str2)
+
+                                            },
+                                            error:function(e){
+                                                alert('잠시 후 다시 시도해주세요2.')
+                                                console.log(e)
+                                            }
+                                        })
+                                           }
+                                            }, error:function(e){
+                                                        alert('잠시 후 다시 시도해주세요3.')
+                                                    }
+                                            })
+
+
+
+
+        },error:function(e){
+            alert('잠시 후에 다시 시도해주세요.')
+
+        }
+
+
+    })
+}
+
+
+
+
+})
+
+
+$(document).on('click','.likeBtnRental' ,function(e){
+
+ let chk = confirm('해당 도서를 대여 하시겠습니까?')
+
+
+    if(chk){
+    let bookName = e.target.getAttribute("data-info")
+
+    console.log(bookName)
+    $.ajax({
+        type : 'POST',
+        url : '/likeBookRental',
+        dataType : 'text',
+        data : {
+               bookName : bookName
+        },success:function(data){
+
+        likeCount = data
+        if(likeCount == 1234){
+            alert('대여 가능한 도서 수는 8권 입니다.')
+        }else{
+          alert('대여 완료 되었습니다.')
+
+          let str = $('#rentalCount').text().replace('회','')
+          console.log(str)
+          $('#rentalCount').text((parseInt(str) + 1) + '회')
+
+
+          $.ajax({
+                    type:"GET",
+                    url: "/likeBookHistory",
+                    data : {
+                        page : likePage,
+                        size : 5
+                    },
+                    dataType : 'json',
+                    success:function(data){
+
+
+                 let str = ""
+                for(let i = 0; i < data.length; i++ ){
+
+                                         str += "<div>"
+                                            + "<div class='d-flex justify-content-start m-3'  >"
+                                                + "<div class='col-1'>"
+                                                    + `<img src='${data[i].bookInfoDTO.bookImg}' height='100px' width='90px'>`
+                                                + "</div>"
+                                                + "<div class='col-6 m-2'>"
+                                                    + "<div class='d-flex align-items flex-column'>"
+                                                        + "<div class='m-1 mt-0 '>"
+                                                            + `<span  class='fw-semibold'>${data[i].bookInfoDTO.bookName} </span>`
+                                                        + "</div>"
+                                                        + "<div class='m-1 mt-0' >"
+                                                            + `<span>저자 : ${data[i].bookInfoDTO.bookAuthor} </span>`
+                                                        + "</div>"
+                                                        + "<div class='m-1  mt-0'>"
+                                                            + `<span>카테고리 : ${data[i].bookInfoDTO.bookCategory}</span>`
+                                                        + "</div>"
+                                                    + "</div>"
+
+                                                + "</div>"
+                                                + "<div class='col-3 m-2 mt-0 text-end'>"
+                                                    + `<span style='color:gray'>${data[i].likeDate}</span>`
+                                                + "</div>"
+                                                + "<div class='col-2 border-start '>"
+                                                    + "<div class='d-flex justify-content-center'>"
+                                                        + "<div class='col-6'>"
+                                                            + `<a class='likeBtnRental mt-4 m-4 ' style='color:white' >`
+                                                                + `<svg fill='#000000'   data-info='${data[i].bookInfoDTO.bookName}'   height='40px' width='40px' version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 489.8 489.8' xml:space='preserve'>`+ "<g id='SVGRepo_bgCarrier' stroke-width='0'>"+ "</g>"+ "<g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'>"+ "</g>"+ "<g id='SVGRepo_iconCarrier'>" + "<g>" + "<g>" + "<path d='M438.2,0H51.6C23.1,0,0,23.2,0,51.6v386.6c0,28.5,23.2,51.6,51.6,51.6h386.6c28.5,0,51.6-23.2,51.6-51.6V51.6 C489.8,23.2,466.6,0,438.2,0z M465.3,438.2c0,14.9-12.2,27.1-27.1,27.1H51.6c-14.9,0-27.1-12.2-27.1-27.1V51.6 c0-14.9,12.2-27.1,27.1-27.1h386.6c14.9,0,27.1,12.2,27.1,27.1V438.2z'>"+ "</path>" + "<path d='M337.4,232.7h-80.3v-80.3c0-6.8-5.5-12.3-12.3-12.3s-12.3,5.5-12.3,12.3v80.3h-80.3c-6.8,0-12.3,5.5-12.3,12.2 c0,6.8,5.5,12.3,12.3,12.3h80.3v80.3c0,6.8,5.5,12.3,12.3,12.3s12.3-5.5,12.3-12.3v-80.3h80.3c6.8,0,12.3-5.5,12.3-12.3 C349.7,238.1,344.2,232.7,337.4,232.7z'>"+ "</path>" + "</g>" + "</g>" + "</g>"+ "</svg>"
+                                                            + "</a>"
+                                                        + "</div>"
+                                                        + "<div class='col-6'>"
+                                                            + `<a class=' likeBtnDelete mt-4 m-2' style='color:white' >`
+                                                                + `<svg width='40px' height='40px'  data-info='${data[i].bookInfoDTO.bookName}'  viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>`+ "<g id='SVGRepo_bgCarrier' stroke-width='0'>"+ "</g>"+ "<g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'>"+ "</g>"+ "<g id='SVGRepo_iconCarrier'>" + "<path d='M10 12L14 16M14 12L10 16M18 6L17.1991 18.0129C17.129 19.065 17.0939 19.5911 16.8667 19.99C16.6666 20.3412 16.3648 20.6235 16.0011 20.7998C15.588 21 15.0607 21 14.0062 21H9.99377C8.93927 21 8.41202 21 7.99889 20.7998C7.63517 20.6235 7.33339 20.3412 7.13332 19.99C6.90607 19.5911 6.871 19.065 6.80086 18.0129L6 6M4 6H20M16 6L15.7294 5.18807C15.4671 4.40125 15.3359 4.00784 15.0927 3.71698C14.8779 3.46013 14.6021 3.26132 14.2905 3.13878C13.9376 3 13.523 3 12.6936 3H11.3064C10.477 3 10.0624 3 9.70951 3.13878C9.39792 3.26132 9.12208 3.46013 8.90729 3.71698C8.66405 4.00784 8.53292 4.40125 8.27064 5.18807L8 6' stroke='#000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>"+ "</path>" + "</g>"+ "</svg>"
+                                                            + "</a>"
+                                                        + "</div>"
+                                                    + "</div>"
+
+
+                                                + "</div>"
+                                                    + "</div>"
+                                                    + "<hr style='color:gray'>"
+
+                                                + "</div>"
+
+
+                                            }
+                                             $('#bookLikeList').html(str)
+
+                                               if(likeCount != 0){
+
+                                                $.ajax({
+                                                type:"GET",
+                                                url: '/searchBookPaging',
+                                                data: {
+                                                    page : likePage,
+                                                    size : 5,
+                                                    resultCount : likeCount
+                                                },
+                                                dataType : 'json',
+                                                success:function(data){
+
+
+                                                 let str2 =  "<nav aria-label='Page navigation example justify-content-center align-items-center'>"
+                                                    +"<ul class='pagination justify-content-center ' >"
+                                                     if(data.prev == true){
+                                                        str2 += "<li class='page-item'>"
+                                                        + "<a class='page-link likeBookPagingBtn' pageLink='pagelink' data-num='" + (data.start - 1)  + "'> Previous </a>"
+                                                        + "</li>"
+                                                        }
+
+                                                    for(let i=data.start; i<=data.end; i++){
+
+                                                        str2 += "<li>"
+                                                        if(data.page == i ){
+                                                             str2 += "<div style='z-index: 1; color: #ccc; font-weight:bold; background-color: #333; border-color: #444;' class='page-link active likeBookPagingBtn'  data-num='" + i +  "'>" +  i + "</div>"
+                                                      }else{
+                                                            str2 += "<a class='page-link  likeBookPagingBtn'  data-num='" + i +  "'>" +  i + "</a>"
+                                                        }
+                                                        str2 +="</li>"
+                                                    }
+
+                                                    if(data.next == true){
+                                                        str2 += "<li class='page-item'>"
+                                                                 + "<a class='page-link likeBookPagingBtn' pageLink='pagelink' data-num='" + (data.end + 1)  + "'>  Next </a>"
+                                                                +"</li>"
+                                                    }
+                                                    str2 += "</ul>"
+                                                            +"</nav>"
+
+                                             $('#likeBookPaging').html(str2)
+
+
+                                                },
+                                                error:function(e){
+                                                    alert('잠시 후 다시 시도해주세요2.')
+                                                    console.log(e)
+                                                }
+                                            })
+                                        }
+
+
+
+                                             $.ajax({
+                                                type : 'GET',
+                                                url : '/rentalBookHistory',
+                                                dataType : 'JSON',
+                                                success:function(data){
+
+                                                let str = ""
+                                                let str2 = ""
+                                                for(let i = 0; i < data.length; i++){
+
+                                                    if(i < 4){
+                                                    str += "<div class='col-3 card' >"
+                                                                 + "<div class='d-flex align-items flex-column '>"
+                                                                     +"<div style='height:100px'>"
+                                                                        + `<img src='${data[i].bookInfoDTO.bookImg}' class='d-block w-75 mx-auto mt-2'  height='100px' alt='...' >`
+                                                                     +"</div>"
+                                                                      +"<div class='mt-3 text-center ' style='height:50px'>"
+                                                                        + `<span class='fw-semibold mt-2 rentalBookName' > ${data[i].bookInfoDTO.bookName}</span>`
+                                                                     +"</div>"
+                                                                      +"<div class='mt-1 text-center' style='height:30px'>"
+                                                                      + `<span class=' mt-2 rentalCountDate'>반납기간 : ${data[i].rentalEndDate}</span>`
+                                                                     +"</div>"
+                                                                       +"<div style='height:35px;' class='text-center mb-2' >"
+                                                                        + `<button class='btn btn-outline-dark w-75  returningBtn'  value='${data[i].bookInfoDTO.bookName}' data-info='${data[i].bookInfoDTO.bookImg}' data-value='${data[i].bookInfoDTO.bookAuthor}' data-name='${data[i].bookInfoDTO.bookPublisher}'data-type='${data[i].bookInfoDTO.bookCategory}'>반납하기</button>`
+                                                                        +"</div>"
+                                                                + "</div>"
+                                                             + "</div>"
+                                                     }else{
+
+                                                      str2 += "<div class='col-3 card' >"
+                                                                 + "<div class='d-flex align-items flex-column '>"
+                                                                     +"<div style='height:100px'>"
+                                                                        + `<img src='${data[i].bookInfoDTO.bookImg}' class='d-block w-75 mx-auto mt-2'  height='100px' alt='...' >`
+                                                                     +"</div>"
+                                                                      +"<div class='mt-3 text-center ' style='height:50px'>"
+                                                                        + `<span class='fw-semibold mt-2 rentalBookName' > ${data[i].bookInfoDTO.bookName}</span>`
+                                                                     +"</div>"
+                                                                      +"<div class='mt-1 text-center' style='height:30px'>"
+                                                                      + `<span class=' mt-2 rentalCountDate'>반납기간 : ${data[i].rentalEndDate}</span>`
+                                                                     +"</div>"
+                                                                       +"<div style='height:35px;' class='text-center mb-2' >"
+                                                                        + `<button class='btn btn-outline-dark w-75  returningBtn'  value='${data[i].bookInfoDTO.bookName}' data-info='${data[i].bookInfoDTO.bookImg}' data-value='${data[i].bookInfoDTO.bookAuthor}' data-name='${data[i].bookInfoDTO.bookPublisher}'data-type='${data[i].bookInfoDTO.bookCategory}'>반납하기</button>`
+                                                                        +"</div>"
+                                                                + "</div>"
+                                                             + "</div>"
+
+
+                                                 }
+
+                                             }
+
+
+
+                                                $('#rentalHistory1').html(str)
+
+                                                $('#rentalHistory2').html(str2)
+
+
+                                                },error:function(e){
+                                                    alert('잠시 후에 다시 시도해주세요1.')
+
+                                                }
+                                             })
+
+
+
+                                            }, error:function(e){
+                                                        alert('잠시 후 다시 시도해주세요3.')
+                                                    }
+                                            })
+
+        }
+
+
+        },error:function(e){
+            alert('잠시 후에 다시 시도해주세요4.')
+        }
+     })
+
+}
+
+
+
+})
+
+
+$(document).on('click','.hopeBtnDelete' ,function(e){
+
+    let chk = confirm('해당 도서에 대한 희망 도서 신청을 취소하시겠습니까?')
+
+    if(chk){
+    let bookName = e.target.getAttribute("data-info")
+
+
+    $.ajax({
+        type : 'DELETE',
+        url : '/hopeBookDelete',
+        dataType : 'text',
+        data : {
+               bookName : bookName
+        },success:function(data){
+
+        let hopeCount = data
+            alert('희망 도서 신청이 취소되었습니다.')
+
+                   $.ajax({
+                        type : 'GET',
+                        url : '/hopeBookHistory',
+                        dataType : 'JSON',
+                        data : {
+                          page : hopePage,
+                          size : 8,
+                          resultCount : hopeCount
+
+                        },success:function(data){
+
+                         let str = ""
+
+                       for(let i = 0; i < data.length; i++ ){
+
+
+                                                 str += "<tr>"
+                                                            + "<th scope='row'>" + "#" + "</th>"
+                                                                + `<td colspan='2' style='width: 25%'>${data[i].bookInfoDTO.bookName}</td>`
+                                                                + `<td style='width: 25%'>${data[i].bookInfoDTO.bookAuthor}</td>`
+                                                                + `<td style='width: 25%'>${data[i].bookInfoDTO.bookCategory}</td>`
+                                                                + `<td style='width: 10%'>${data[i].bookInfoDTO.bookPublisher}</td>`
+                                                                + "<td style='width: 15%'>"
+                                                                    + "<div class='d-flex justify-content-center'>"
+                                                                        + "<div class='col-6 m-1 mt-0 mb-0' >"
+
+                                                                        + "</div>"
+                                                                        + "<div class='col-6'>"
+                                                                            + "<a class='hopeBtnDelete'  >"
+                                                                            + `<svg width='40px' height='40px' data-info='${data[i].bookInfoDTO.bookName}' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>`+ "<g id='SVGRepo_bgCarrier' stroke-width='0'>"+ "</g>"+ "<g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'>"+ "</g>"+ "<g id='SVGRepo_iconCarrier'>" + "<path d='M10 12L14 16M14 12L10 16M18 6L17.1991 18.0129C17.129 19.065 17.0939 19.5911 16.8667 19.99C16.6666 20.3412 16.3648 20.6235 16.0011 20.7998C15.588 21 15.0607 21 14.0062 21H9.99377C8.93927 21 8.41202 21 7.99889 20.7998C7.63517 20.6235 7.33339 20.3412 7.13332 19.99C6.90607 19.5911 6.871 19.065 6.80086 18.0129L6 6M4 6H20M16 6L15.7294 5.18807C15.4671 4.40125 15.3359 4.00784 15.0927 3.71698C14.8779 3.46013 14.6021 3.26132 14.2905 3.13878C13.9376 3 13.523 3 12.6936 3H11.3064C10.477 3 10.0624 3 9.70951 3.13878C9.39792 3.26132 9.12208 3.46013 8.90729 3.71698C8.66405 4.00784 8.53292 4.40125 8.27064 5.18807L8 6' stroke='#000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>"+ "</path>" + "</g>"+ "</svg></a>"
+                                                                        + "</div>"
+                                                                    + "</div>"
+                                                                + "</td>"
+                                                            + "</tr>"
+
+                                }
+                                $('#hopeBookList').html(str)
+
+
+                                if(hopeCount != 0){
+
+                                 $.ajax({
+                                                type:"GET",
+                                                url: '/searchBookPaging',
+                                                data: {
+                                                    page : hopePage,
+                                                    size : 8,
+                                                    resultCount : hopeCount
+                                                },
+                                                dataType : 'json',
+                                                success:function(data){
+
+                                                 let str2 =  "<nav aria-label='Page navigation example justify-content-center align-items-center'>"
+                                                +"<ul class='pagination justify-content-center ' >"
+                                                 if(data.prev == true){
+                                                    str2 += "<li class='page-item'>"
+                                                    + "<a class='page-link hopeBookPagingBtn' pageLink='pagelink' data-num='" + (data.start - 1)  + "'> Previous </a>"
+                                                    + "</li>"
+                                                    }
+
+                                                for(let i=data.start; i<=data.end; i++){
+
+                                                    str2 += "<li>"
+                                                    if(data.page == i ){
+                                                         str2 += "<div style='z-index: 1; color: #ccc; font-weight:bold; background-color: #333; border-color: #444;' class='page-link active hopeBookPagingBtn'  data-num='" + i +  "'>" +  i + "</div>"
+                                                  }else{
+                                                        str2 += "<a class='page-link  hopeBookPagingBtn'  data-num='" + i +  "'>" +  i + "</a>"
+                                                    }
+                                                    str2 +="</li>"
+                                                }
+
+                                                if(data.next == true){
+                                                    str2 += "<li class='page-item'>"
+                                                             + "<a class='page-link hopeBookPagingBtn' pageLink='pagelink' data-num='" + (data.end + 1)  + "'>  Next </a>"
+                                                            +"</li>"
+                                                }
+                                                str2 += "</ul>"
+                                                        +"</nav>"
+
+
+                                         $('#hopeBookPaging').html(str2)
+
+
+                        },error:function(e){
+
+                        }})
+                        }
+                           },error:function(e){
+
+                        }})
+
+        },error:function(e){
+            alert('잠시 후에 다시 시도해주세요.')
+
+        }})
+
+
+}
+
+
+})
+
+
+
+
+
+
+
+
+</script>
+
+
+</html>

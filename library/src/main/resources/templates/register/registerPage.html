@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout" >
+<link href="../../static/bootstrap/css/bootstrap.min.css"
+      th:href="@{/bootstrap/css/bootstrap.min.css}"  rel="stylesheet" >
+<script src="../../static/bootstrap/js/bootstrap.bundle.min.js"
+        th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+<link href="css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet" />
+<style>
+    .underline { 　border-left-width:0;
+     　border-right-width:0; 　
+     border-top-width:0; 　
+     border-bottom-width:1;
+     }
+
+
+</style>
+<body>
+
+<div th:replace="fragments/header::Main_header"></div>
+
+<div class="container">
+
+
+    <form action="/register" method="post" enctype="application/x-www-form-urlencoded;charset=UTF-8">
+
+        <div class="d-flex justify-content-center">
+            <div class="d-flex align-items flex-column  border w-50 ">
+                <div class="d-flex justify-content-center mt-3">
+                    <div class="col-3">
+                    </div>
+                    <div class="col-6">
+                        <input type="text" class="form-control" placeholder="아이디" style="border-width: 0 0 1px;"
+                               id="memberId" name="memberId">
+                    </div>
+                    <div class="col-3">
+                        <button class="btn btn-dark" id="memberIdCheck">중복 검사</button>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="d-flex justify-content-center mt-5">
+                        <div class="col-3">
+                        </div>
+                        <div class="col-6">
+                            <input type="password" class="form-control" placeholder="비밀번호"
+                                   style="border-width: 0 0 1px;" id="memberPswd" name="memberPswd">
+                        </div>
+                        <div class="col-3">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="d-flex justify-content-center mt-5">
+                        <div class="col-3">
+                        </div>
+                        <div class="col-6">
+                            <input type="text" class="form-control" placeholder="이름" style="border-width: 0 0 1px;"
+                                   id="memberName" name="memberName">
+                        </div>
+                        <div class="col-3">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="d-flex justify-content-center mt-5">
+                        <div class="col-3">
+                        </div>
+                        <div class="col-6">
+                            <div class="d-flex justify-content-start">
+                                <div class="col-3">
+                                    <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                           class="form-control" placeholder="010" value="010" readonly
+                                           style="border-width: 0 0 1px;" id="memberPhone1">
+                                </div>
+                                <div class="col-4 mx-auto">
+                                    <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                           class="form-control" placeholder="0000" maxlength="4"
+                                           style="border-width: 0 0 1px;" id="memberPhone2">
+                                </div>
+                                <div class="col-4">
+                                    <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                           class="form-control" placeholder="0000" maxlength="4"
+                                           style="border-width: 0 0 1px;" id="memberPhone3">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-3">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="d-flex justify-content-center mt-5">
+                        <div class="col-3">
+                        </div>
+                        <div class="col-6">
+                            <input type="text" class="form-control"
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="8"
+                                   placeholder="생년월일 ex) 19990420" style="border-width: 0 0 1px;" id="memberAge">
+                        </div>
+                        <div class="col-3">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="d-flex justify-content-center mt-5 mb-4">
+                        <div class="col-3">
+                        </div>
+                        <div class="col-3">
+                            <input type="text" class="form-control zoneCode" placeholder="주소"
+                                   style="border-width: 0 0 1px;" id="memberAddress">
+                        </div>
+                        <div class="col-3">
+                            <button class="btn btn-dark" id="findAddressBtn">우편번호 찾기</button>
+                        </div>
+                        <div class="col-3">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="d-flex justify-content-center mt-2 mb-4">
+                        <div class="col-3">
+                        </div>
+                        <div class="col-6">
+                            <input type="text" class="form-control roadAddress" placeholder="도로명 주소"
+                                   style="border-width: 0 0 1px;" id="memberAddress2">
+                        </div>
+                        <div class="col-3">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div>
+                    <div class="d-flex justify-content-center mt-2 mb-4">
+                        <div class="col-3">
+                        </div>
+                        <div class="col-6">
+                            <input type="text" class="form-control" placeholder="상세 주소" style="border-width: 0 0 1px;"
+                                   id="memberAddress3">
+                        </div>
+                        <div class="col-3">
+                        </div>
+                    </div>
+                </div>
+
+                <input type="hidden" id="memberPhonee" name="memberPhone">
+                <input type="hidden" id="memberAddresss" name="memberAddress">
+                <input type="hidden" id="memberAgee" name="memberAge">
+
+
+                <button type="submit" id="send" style="height:50px" class="btn btn-secondary">회원가입 완료</button>
+            </div>
+
+        </div>
+
+
+    </form>
+</div>
+
+
+<div th:replace="fragments/footer::footer"></div>
+<script
+        src="https://code.jquery.com/jquery-3.7.0.js"
+        integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+        crossorigin="anonymous"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script  th:inline="javascript">
+
+
+$('#findAddressBtn').click(function(e){
+
+  e.preventDefault()
+
+
+ new daum.Postcode({
+        oncomplete: function(data) {
+
+            document.getElementById("memberAddress").value = data.zonecode;
+            document.getElementById("memberAddress2").value = data.roadAddress;
+
+        }
+    }).open();
+
+
+})
+
+
+
+let memberIdChk = 'false'
+
+$('#memberIdCheck').click(function(e){
+    e.preventDefault()
+
+    let memberId = $('#memberId').val()
+
+    if(memberId.length == 0){
+        alert('아이디를 입력해주세요.')
+        return;
+    }
+
+        $.ajax({
+
+        type:'GET',
+        dataType : 'text',
+        url : '/memberIdCheck',
+        data : {
+            memberId : memberId
+
+        },success:function(data){
+        console.log(data)
+
+            if(data == 'true'){
+                alert('사용 가능한 아이디 입니다.')
+                memberIdChk = 'true'
+
+            }else{
+                alert('이미 존재하는 아이디 입니다.')
+                memberIdChk = 'false'
+            }
+
+        },error:function(data){
+            alert('잠시 후에 다시 시도해주세요,')
+        }
+
+
+        })
+
+})
+
+$('#send').click(function(e){
+
+  let memberId = $('#memberId').val()
+  let pswd = $('#memberPswd').val()
+  let memberName = $('#memberName').val()
+  let phone2 = $('#memberPhone2').val()
+  let phone3 = $('#memberPhone3').val()
+
+  let age = $('#memberAge').val()
+  let address1 = $('#memberAddress').val()
+  let address2 = $('#memberAddress2').val()
+  let address3 = $('#memberAddress3').val()
+
+
+
+
+
+  let arr = [memberId,pswd,memberName,phone2,phone3,age,address1,address2,address3]
+
+    for(let i = 0; i < arr.length; i++){
+
+        if(arr[i].length == 0){
+            if(i == 0){
+                alert('아이디를 입력해주세요.')
+            }else if(i == 1 ){
+                alert('비밀번호를 입력해주세요.')
+            }else if(i == 2){
+                alert('이름을 입력해주세요.')
+            }else if(i == 3 || i == 4){
+                alert('전화번호를 입력해주세요.')
+            }else if(i == 5){
+                 alert('나이를 입력해주세요.')
+            }else if(i == 6 || i == 7 || i == 8){
+                 alert('주소를 입력해주세요.')
+            }
+            e.preventDefault()
+                return;
+
+        }
+    }
+
+
+
+     if(arr[3].length != 4 || arr[4].length != 4 ){
+           alert('전화번호를 제대로 입력해주세요.')
+           e.preventDefault()
+           return;
+
+      }
+
+    const birthRegex = /^(19|20)\d{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$/;
+     const birth = arr[5]
+
+    if (birthRegex.test(birth)) {
+
+    } else {
+      alert('생년월일을 제대로 입력해주세요.');
+       e.preventDefault()
+       return;
+    }
+
+
+
+
+    if(memberIdChk == 'false'){
+
+        alert('아이디 중복 검사를 해주세요')
+         e.preventDefault()
+        return;
+    }
+
+
+        let ageStr = age.substr(0, 4);
+        let ageStr2 = age.substr(4, 2);
+        let ageStr3 = age.substr(6, 2);
+
+       let phone = '010-' + phone2 + '-' + phone3
+       let address =  address1 + ' ' + address2 + ' ' + address3
+       let age2 = ageStr + '-' + ageStr2 + '-' + ageStr3
+
+
+
+
+
+        document.getElementById("memberPhonee").value = phone
+        document.getElementById("memberAddresss").value = address
+        document.getElementById("memberAgee").value = age2
+
+
+    alert('회원가입 되었습니다.')
+
+
+})
+
+
+
+
+</script>
+
+</body>
+</html>
