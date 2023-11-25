@@ -39,6 +39,14 @@
 
 <img src='https://github.com/oals/portfolioLibrary/assets/136543676/8d5fe7df-2af2-4951-baa6-4789398d8e5f'>
 
+
+<hr>
+
+<img src='https://github.com/oals/portfolioLibrary/assets/136543676/da4eb3f9-9875-40e5-b0e6-89dae5f50731' width = '150px'>
+
+제목,저자,출판사별로 검색을 할 수 있습니다.
+
+
 <h3>관심 대여</h3>
 <br>
 
@@ -47,14 +55,18 @@
 <h3>학습실</h3>
 <br>
 
+<img src='https://github.com/oals/portfolioLibrary/assets/136543676/1dfc2af5-9e24-4c2d-9b61-1b6efc842a31'>
 
 <h3>희망 도서 신청</h3>
 <br>
+
+<img src='https://github.com/oals/portfolioLibrary/assets/136543676/f557ca5d-efaf-48b3-bc2f-5b9e7e10c584'>
 
 
 <h3>관리자 페이지</h3>
 <br>
 
+<img src='https://github.com/oals/portfolioLibrary/assets/136543676/5052951d-1189-40dc-b947-cf0ff23d8ce8'>
 
 
 
