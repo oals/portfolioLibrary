@@ -32,9 +32,6 @@
 <h3>회원가입&로그인</h3>
 <br>
 
-<img src='https://github.com/oals/portfolioLibrary/assets/136543676/b744b275-b230-42f8-bed3-12146afeae3c'>
-
-
 <ul>
  <li>중복 아이디 검사 기능</li>
  <li>모든 항목의 입력 체크</li>
@@ -45,6 +42,7 @@
 <br>
 <br>
 
+<img src='https://github.com/oals/portfolioLibrary/assets/136543676/82cf88d3-403e-44b3-aa84-06f4e4ee1732'>
 
 <h3>도서 대여</h3>
 <br>
