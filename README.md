@@ -111,7 +111,7 @@
  
  </summary> 
  
-<img src='https://github.com/oals/portfolioLibrary/assets/136543676/24c3a247-da59-424d-909d-d8d5af8e8fbb'>
+<img src='https://github.com/oals/portfolioLibrary/assets/136543676/079dbb43-c836-4552-a0d0-265f49c5357c'>
 </details>
 
 
@@ -126,10 +126,18 @@
 <img src='https://github.com/oals/portfolioLibrary/assets/136543676/f557ca5d-efaf-48b3-bc2f-5b9e7e10c584'>
 
 
-<ul>
- <li>희망 도서 신청 -> 관리자 검토</li>
+<br>
+<br>
 
-</ul>
+
+<details>
+ <summary> 희망 도서 신청 플로우 차트
+ 
+ </summary> 
+ 
+<img src='https://github.com/oals/portfolioLibrary/assets/136543676/b662b2e5-44cd-493f-a4cc-c69eaabc941b'>
+</details>
+
 
 <br>
 <br>
