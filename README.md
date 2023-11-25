@@ -29,6 +29,32 @@
 # 핵심 기능 및 페이지 소개
 
 
+<h3>회원가입&로그인</h3>
+<br>
+
+<img src='https://github.com/oals/portfolioLibrary/assets/136543676/b744b275-b230-42f8-bed3-12146afeae3c'>
+
+<h3>도서 대여</h3>
+<br>
+
+<img src='https://github.com/oals/portfolioLibrary/assets/136543676/8d5fe7df-2af2-4951-baa6-4789398d8e5f'>
+
+<h3>관심 대여</h3>
+<br>
+
+<img src='https://github.com/oals/portfolioLibrary/assets/136543676/371370a7-25c4-40bf-8add-3a0db924fd96'>
+
+<h3>학습실</h3>
+<br>
+
+
+<h3>희망 도서 신청</h3>
+<br>
+
+
+<h3>관리자 페이지</h3>
+<br>
+
 
 
 
