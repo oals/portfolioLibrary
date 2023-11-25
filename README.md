@@ -34,12 +34,18 @@
 
 <img src='https://github.com/oals/portfolioLibrary/assets/136543676/17e39a43-ccb3-40c0-9381-239f1bac15f4'>
 
-<ul>
- <li>중복 아이디 검사 기능</li>
- <li>모든 항목의 입력 체크</li>
- <li>정규 표현식을 통한 잘못된 입력 방지</li>
- <li>주소 API를 통해 우편번호와 도로명 주소 가져오기</li>
-</ul>
+
+<br>
+<br>
+<details>
+ <summary> 회원가입 플로우 차트
+ 
+ </summary> 
+ 
+<img src='https://github.com/oals/portfolioLibrary/assets/136543676/f5428db8-442f-4200-8ac6-12026a05570b'>
+</details>
+
+
 
 <br>
 <br>
@@ -66,17 +72,24 @@
 <br>
 
 
-<h3>관심 대여</h3>
+<h3>관심 도서</h3>
 <br>
 
 <img src='https://github.com/oals/portfolioLibrary/assets/136543676/371370a7-25c4-40bf-8add-3a0db924fd96'>
 
+<br>
+<br>
 
-<ul>
- <li>이미 관심 도서목록에 있는 도서 일 경우 오류 메세지 출력</li>
- <li>마이페이지의 관심 도서 목록에서 도서 대여 및 관심 도서 목록에서 지우기 기능 지원</li>
+<details>
+ <summary> 관심 도서 플로우 차트
+ 
+ </summary> 
+ 
+<img src='https://github.com/oals/portfolioLibrary/assets/136543676/689b487c-9ab0-498e-a44e-2dd1bbed9a99'>
+</details>
 
-</ul>
+
+
 
 <br>
 <br>
@@ -91,12 +104,16 @@
 
 <img src='https://github.com/oals/portfolioLibrary/assets/136543676/1dfc2af5-9e24-4c2d-9b61-1b6efc842a31'>
 
-<ul>
- <li>1인 1좌석 체크</li>
-  <li>스레드를 통해 1분 간격으로 이용시간 업데이트</li>
- <li>이용시간 연장 기능</li>
- <li>학습실 이용 내역 기록</li>
-</ul>
+
+
+<details>
+ <summary> 학습실 플로우 차트
+ 
+ </summary> 
+ 
+<img src='https://github.com/oals/portfolioLibrary/assets/136543676/24c3a247-da59-424d-909d-d8d5af8e8fbb'>
+</details>
+
 
 <br>
 <br>
