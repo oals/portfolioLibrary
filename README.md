@@ -54,7 +54,6 @@
 <br>
 <br>
 <img src='https://github.com/oals/portfolioLibrary/assets/136543676/da4eb3f9-9875-40e5-b0e6-89dae5f50731' width = '150px'>
-<img src='https://github.com/oals/portfolioLibrary/assets/136543676/c1e218f7-6ccd-4469-84a0-9d93ec9601c0' width = '750px'>
 
 <ul>
  <li>(위 소스코드) if문으로 호출할 url을 조정하여 도서명,저자,출판사 분류별로 검색 할 수 있도록 구현 했습니다.</li>
