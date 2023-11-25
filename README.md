@@ -32,6 +32,8 @@
 <h3>회원가입&로그인</h3>
 <br>
 
+<img src='https://github.com/oals/portfolioLibrary/assets/136543676/17e39a43-ccb3-40c0-9381-239f1bac15f4'>
+
 <ul>
  <li>중복 아이디 검사 기능</li>
  <li>모든 항목의 입력 체크</li>
@@ -42,7 +44,7 @@
 <br>
 <br>
 
-<img src='https://github.com/oals/portfolioLibrary/assets/136543676/82cf88d3-403e-44b3-aa84-06f4e4ee1732'>
+
 
 <h3>도서 대여</h3>
 <br>
@@ -51,14 +53,14 @@
 
 <br>
 <br>
-<img src='https://github.com/oals/portfolioLibrary/assets/136543676/da4eb3f9-9875-40e5-b0e6-89dae5f50731' width = '150px'>
+<details>
+ <summary> 도서 대여 플로우 차트
+ 
+ </summary> 
+ 
+<img src='https://github.com/oals/portfolioLibrary/assets/136543676/60657fde-7948-4fa6-b7d2-43157bea6c37'>
+</details>
 
-<ul>
- <li>(위 소스코드) if문으로 호출할 url을 조정하여 도서명,저자,출판사 분류별로 검색 할 수 있도록 구현 했습니다.</li>
- <li>최대 8권의 도서 대여 .</li>
- <li>이미 대여중인 도서 일 경우 오류 메세지 출력 </li>
- <li>도서 반납 -> 반납 신청 목록 -> 관리자 검토 -> 반납 완료</li>
-</ul>
 
 <br>
 <br>
