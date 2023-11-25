@@ -105,6 +105,8 @@
 <img src='https://github.com/oals/portfolioLibrary/assets/136543676/1dfc2af5-9e24-4c2d-9b61-1b6efc842a31'>
 
 
+<br>
+<br>
 
 <details>
  <summary> 학습실 플로우 차트
@@ -151,17 +153,20 @@
 <img src='https://github.com/oals/portfolioLibrary/assets/136543676/5052951d-1189-40dc-b947-cf0ff23d8ce8'>
 
 
-
-
-
-<ul>
- <li>반납 신청된 도서들의 반납 완료 </li>
- <li>희망 도서 검토 </li>
-
-</ul>
-
 <br>
 <br>
+
+<details>
+ <summary> 관리자 페이지 플로우 차트
+ 
+ </summary> 
+ 
+<img src='https://github.com/oals/portfolioLibrary/assets/136543676/d284cf07-56aa-4a47-a027-5df2278230c3'>
+</details>
+
+
+
+
 
 
 
