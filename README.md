@@ -25,6 +25,8 @@
 
 # E-R 다이어그램
 
+<img src='https://github.com/oals/portfolioLibrary/assets/136543676/ffaa8bf6-e976-4a16-891b-d0d43e4bd59b'>
+
 
 # 핵심 기능 및 페이지 소개
 
@@ -50,6 +52,29 @@
 <br>
 <br>
 
+
+
+
+<h3>학습실</h3>
+<br>
+
+<img src='https://github.com/oals/portfolioLibrary/assets/136543676/1dfc2af5-9e24-4c2d-9b61-1b6efc842a31'>
+
+
+<br>
+<br>
+
+<details>
+ <summary> 학습실 플로우 차트
+ 
+ </summary> 
+ 
+<img src='https://github.com/oals/portfolioLibrary/assets/136543676/079dbb43-c836-4552-a0d0-265f49c5357c'>
+</details>
+
+
+<br>
+<br>
 
 
 <h3>도서 대여</h3>
@@ -89,32 +114,6 @@
 </details>
 
 
-
-
-<br>
-<br>
-
-
-
-
-
-
-<h3>학습실</h3>
-<br>
-
-<img src='https://github.com/oals/portfolioLibrary/assets/136543676/1dfc2af5-9e24-4c2d-9b61-1b6efc842a31'>
-
-
-<br>
-<br>
-
-<details>
- <summary> 학습실 플로우 차트
- 
- </summary> 
- 
-<img src='https://github.com/oals/portfolioLibrary/assets/136543676/079dbb43-c836-4552-a0d0-265f49c5357c'>
-</details>
 
 
 <br>
