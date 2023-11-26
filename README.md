@@ -72,6 +72,77 @@
 <img src='https://github.com/oals/portfolioLibrary/assets/136543676/079dbb43-c836-4552-a0d0-265f49c5357c'>
 </details>
 
+<details>
+ <summary> 학습실 스레드 코드
+ 
+ </summary> 
+
+
+     public class MyRunnable implements Runnable {
+        private final String seatNum;
+        private boolean threadChk;
+
+        public MyRunnable(String seatNum) {
+            this.seatNum = seatNum;
+            this.threadChk = true;
+        }
+
+        @Override
+        public void run() {
+            while(threadChk) {
+
+                try {
+                    //1분 주기로 현재 남은 이용시간 업데이트
+                    Thread.sleep(60000);
+
+                    JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+                    QStudyRoomState qStudyRoomState = QStudyRoomState.studyRoomState;
+                    StudyRoomState studyRoomState =  queryFactory.selectFrom(qStudyRoomState)
+                            .where(qStudyRoomState.seatNum.eq(seatNum))
+                            .fetchOne();
+                    //스레드 종료
+                    if(studyRoomState == null){
+                        Thread.interrupted();
+                        break;
+                    }
+                    //남은 이용 시간 계산
+                    LocalTime time = LocalTime.parse(studyRoomState.getSeatCountTime());
+                    time = time.minusMinutes(1);
+                    
+                    //현재 남은 이용 시간이 없을 때 
+                    if(time.toString().equals("00:00")){
+                        studyRoomStateRepository.deleteById(studyRoomState.getId());
+                        threadChk = false;
+
+                        LocalDateTime now = LocalDateTime.now();
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분");
+                        String endTime = now.format(formatter);
+
+                        StudyRoomHistory studyRoomHistory = StudyRoomHistory.builder()
+                                .seatNum(studyRoomState.getSeatNum())
+                                .member(studyRoomState.getMember())
+                                .historySeatStartDate(studyRoomState.getSeatStartDate())
+                                .historySeatEndDate(endTime)
+                                .build();
+                        //학습실 이용 정보 저장
+                        StudyRoomHistoryRepository.save(studyRoomHistory);
+                    }else {
+                        //현재 남은 이용 시간 업데이트
+                        studyRoomState.setSeatCountTime(time.toString());
+                        studyRoomStateRepository.save(studyRoomState);
+                    }
+
+
+
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+ 
+
+</details>
 
 <br>
 <br>
