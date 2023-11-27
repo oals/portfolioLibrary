@@ -30,6 +30,400 @@
 
 # 핵심 기능 및 페이지 소개
 
+<details>
+ <summary> Member Entity 
+ 
+ </summary> 
+ 
+
+
+
+      @Getter
+      @Setter
+      @Builder
+      @AllArgsConstructor
+      @NoArgsConstructor
+      @Entity
+      @Table(name="member")
+      public class Member {
+
+    @Id
+    @Column(name="member_id")
+    private String memberId; // 아이디
+
+    private String memberName; //이름
+
+    private String memberPswd; //비밀번호
+
+    private String memberAge; //생년월일
+
+    private String memberAddress; //주소
+
+    private String memberPhone; //전화번호
+
+    private int bookRentalCount; //대여 횟수
+
+    private int studyRentalCount; //학습실 이용 횟수
+
+    private String memberDate;  //가입 날짜
+
+    @Enumerated(EnumType.STRING)
+    private Role role;  //권한
+
+    public static Member createMember(MemberDTO memberDTO, PasswordEncoder passwordEncoder){
+
+        Member member = new Member();
+        member.setMemberId(memberDTO.getMemberId());
+        member.setMemberName(memberDTO.getMemberName());
+        member.setMemberPhone(memberDTO.getMemberPhone());
+        member.setMemberAddress(memberDTO.getMemberAddress());
+        member.setMemberAge(memberDTO.getMemberAge());
+        member.setBookRentalCount(memberDTO.getBookRentalCount());
+        member.setStudyRentalCount(memberDTO.getStudyRentalCount());
+        member.setMemberDate(memberDTO.getMemberDate());
+
+        member.setRole(Role.USER);
+
+        // 암호화
+        String password = passwordEncoder.encode(memberDTO.getMemberPswd());
+        member.setMemberPswd(password);
+
+        return member;
+    }
+
+
+
+    }
+
+
+
+
+   
+
+</details>
+
+
+<details>
+ <summary> BookRentalHistory Entity
+ 
+ </summary> 
+ 
+
+
+     @Getter
+     @Setter
+     @Builder
+     @AllArgsConstructor
+     @NoArgsConstructor
+     @Entity
+     public class BookRentalHistory {
+
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "book_Name")
+    private BookInfo bookInfo; //도서 정보
+
+
+    private String rentalStartDate; // 대여 시작 날짜
+
+    private String rentalEndDate; //대여 종료 날짜
+
+    @Column(columnDefinition = "TINYINT(1)")
+    private boolean rentalState; //반납 여부
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member; //사용자 정보
+
+    
+    }
+
+
+
+
+
+
+</details>
+
+
+
+<details>
+ <summary> BookRentalReturnHistory Entity
+ 
+ </summary> 
+ 
+
+
+     
+     @Getter
+     @Setter
+     @Builder
+     @AllArgsConstructor
+     @NoArgsConstructor
+     @Entity
+     public class BookRentalReturnHistory {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "book_Name")
+    private BookInfo bookInfo; //도서 정보
+
+    private String returnDate; //반납 날짜
+
+    @Column(columnDefinition = "TINYINT(1)")
+    private boolean returnState; //반납 여부
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member; //사용자 정보
+
+
+
+
+    }
+
+
+
+
+
+
+</details>
+
+
+<details>
+ <summary> BookLikeHistory Entity
+ 
+ </summary> 
+
+
+ 
+     @Getter
+     @Setter
+     @Builder
+     @AllArgsConstructor
+     @NoArgsConstructor
+     @Entity
+     public class BookLikeHistory {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "book_Name")
+    private BookInfo bookInfo; //도서 정보
+
+
+    private boolean likeRentalState; //대여 가능 여부
+
+    private String likeDate;  //현재 시간
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;   //사용자 정보
+
+
+
+
+     }
+
+
+
+
+
+
+
+</details>
+
+
+<details>
+ <summary> BookHopeHistory Entity
+
+
+ 
+ </summary> 
+ 
+
+
+
+
+     @Getter
+     @Setter
+     @Builder
+     @AllArgsConstructor
+     @NoArgsConstructor
+     @Entity
+     public class BookHopeHistory {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "book_Name")
+    private BookInfo bookInfo; //도서 정보
+
+    private String hopeDate;  //신청 날짜
+
+    private boolean hopeState; //도서 상태
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;  //사용자명
+
+
+    }
+
+
+
+
+
+
+</details>
+
+
+
+
+<details>
+ <summary> BookInfo Entity
+ 
+ </summary> 
+
+
+
+     @Getter
+     @Setter
+     @AllArgsConstructor
+     @NoArgsConstructor
+     @Builder
+     @Entity
+     public class BookInfo {
+
+    @Id
+    @Column(name="book_Name")
+    private String bookName; //도서명
+    private String bookImg; //도서 이미지
+    private String  bookAuthor; // 저자
+    private String  bookPublisher; // 출판사
+    private String  bookCategory; //도서 카테고리
+
+
+
+
+    }
+
+
+
+ 
+ 
+
+</details>
+
+
+<details>
+ <summary> StudyRoomHistory Entity
+ 
+ </summary> 
+
+
+
+
+     @Getter
+     @Setter
+     @Builder
+     @AllArgsConstructor
+     @NoArgsConstructor
+     @Entity
+     public class StudyRoomHistory {
+
+    @javax.persistence.Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    private Long Id;
+
+    private String seatNum;  //좌석 번호
+
+    private String historySeatStartDate; // 이용 시작 시간
+    private String historySeatEndDate; //이용 끝 시간
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member; //사용자 정보
+
+
+
+
+    }
+
+
+
+
+
+ 
+ 
+
+</details>
+
+
+
+<details>
+ <summary> StudyRoomState Entity
+ 
+ </summary> 
+
+
+
+
+
+      @Getter
+      @Setter
+      @Builder
+      @AllArgsConstructor
+      @NoArgsConstructor
+      @Entity
+      public class StudyRoomState {
+
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(name="room_id")
+    private Long Id;
+
+    private String seatNum;  //좌석 번호
+
+    private String seatStartDate; // 이용 시작 시간
+
+    private String seatCountTime; //남은 이용 시간
+
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;  //사용자 정보
+
+
+    }
+
+
+
+
+
+
+ 
+</details>
+
+
+
+
+
+
+
+
+<hr>
 
 <h3>회원가입&로그인</h3>
 <br>
